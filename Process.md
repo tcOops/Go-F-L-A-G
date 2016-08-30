@@ -53,7 +53,7 @@ Row-store | Column-store:
 
 ```
 MPP架构：
-Massively Parallel Processing, 一种非共享的结构， 节点之间他人通过网络进行互联， 并行数据库大都采用此种结构
+  Massively Parallel Processing, 一种非共享的结构， 节点之间他人通过网络进行互联， 并行数据库大都采用此种结构
 ```
 
 ```
@@ -62,4 +62,23 @@ Massively Parallel Processing, 一种非共享的结构， 节点之间他人通
 主要解决的问题是：试图将分布式系统进行统一管理以及调度， 包括解决分布式系统中常见的一些需要处理的问题：数据分布 | 负载均衡| 一致性问题 等等。 同时也可能会提供一些基本的有关存储的公用模块给其他应用使用。
   这样的话， 该引擎就相当于对其他层屏蔽了分布式系统在数据存储方面的差异，使之看起来像一个单机系统，这样其他应用就不需要再去考虑分布式系统数据存储的问题了。
   其他一些应用， 比如分布式数据库都是基于分布式存储引擎来进行开发。
+```
 
+```
+区分Hive与HBase：
+  Hive应该算是一个插件， 将标准的SQL进行解析
+  Hbase是基于HDFS的一个数据库。
+  两者的操作模式： Hive+HDFS / Hbase客户端
+  两者皆为Hadoop生态下的重要组件， 其中HBase提供了一个客户端，用户可以基于这个客户端编写Map-Reduce程序，去操作Hbase
+Hive是将标准SQL应用到HDFS上的一种技术，做了ETL以及SQL转换的工作
+```
+
+```
+ZooKeeper的使用场景：
+  [http://www.cnblogs.com/ggjucheng/p/3352614.html](http://www.cnblogs.com/ggjucheng/p/3352614.html)
+```
+
+```
+有关JDBC的介绍：
+[https://www.javacodegeeks.com/2015/03/jdbc%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B.html](https://www.javacodegeeks.com/2015/03/jdbc%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B.html)
+···

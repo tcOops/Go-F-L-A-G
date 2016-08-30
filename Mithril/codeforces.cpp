@@ -45,75 +45,65 @@ inline void gn(int&x){long long t;gn(t);x=t;}
 inline void gn(unsigned long long&x){long long t;gn(t);x=t;}
 inline void gn(double&x){double t;scanf("%lf",&t);x=t;}
 inline void gn(long double&x){double t;scanf("%lf",&t);x=t;}
-const int N = 1e6 + 10;
-int a[N], c[N];
-int sum[N], ans[N];
-int n, m;
-map<int, int> mp;
 
-struct QUERY {
-  int l, r;
-  int id;
-  bool operator <(const QUERY &rhs) const {
-    return r < rhs.r || (r == rhs.r && l < rhs.l);
-  }
-}query[N];
-
-void update(int idx, int v) {
-  while(idx <= n) {
-    c[idx] ^= v;
-    idx += idx & (-idx);
-  }
-}
-
-int get(int idx) {
-  int ret = 0;
-  while(idx) {
-    ret ^= c[idx];
-    idx = idx & (idx - 1);
-  }
-  return ret;
-}
+const int N = 110;
+const ll INF = 0x3f3f3f3f3f;
+long long dp[N][N][N];
+int col[N][N];
+int c[N];
 
 int main() {
-  gn(n);
-
-  sum[0] = 0;
+  int n, m, k;
+  gn(n); gn(m); gn(k);
   for(int i = 1; i <= n; ++i) {
-    gn(a[i]);
-    sum[i] = sum[i-1] ^ a[i];
+    gn(c[i]);
+  }
+  for(int i = 1; i <= n; ++i) {
+    for(int j = 1; j <= m; ++j) {
+      gn(col[i][j]);
+    }
+  }
+  memset(dp, INF, sizeof(dp));
+  if(c[1] == 0) {
+    for(int i = 1; i <= m; ++i) {
+      dp[1][1][i] = col[1][i];
+    }
+  }
+  else {
+    dp[1][1][c[1]] = 0;
   }
 
-  gn(m);
-  for(int i = 1; i <= m; ++i) {
-    gn(query[i].l); gn(query[i].r);
-    query[i].id = i;
-  }
-  sort(query+1, query+1+m);
-
-  int j = 1;
-  for(int i = 1; i <= n; ++i) {
-    if(mp.find(a[i]) == mp.end()) {
-      mp[a[i]] = i;
-    }
-    else {
-      update(mp[a[i]], a[i]);
-      mp[a[i]] = i;
-    }
-    update(i, a[i]);
-
-    if(query[j].r == i) {
-      while(j <= m && query[j].r == i) {
-        int rv = get(query[j].r) ^ sum[query[j].r];
-        ans[query[j].id] = rv ^ get(query[j].l - 1) ^ sum[query[j].l - 1];
-        ++j;
+  for(int i = 2; i <= n; ++i) {
+    for(int j = 1; j <= k; ++j) {
+      if(c[i] == 0) {
+        for(int a = 1; a <= m; ++a) {
+          dp[i][j][a] = min(dp[i][j][a], dp[i-1][j][a] +col[i][a]);
+          for(int p = 1; p <= m; ++p) {
+            if(p == a) continue;
+            dp[i][j][a] = min(dp[i][j][a], dp[i-1][j-1][p] + col[i][a]);
+          }
+        }
       }
-      if(j > m) break;
+      else {
+        dp[i][j][c[i]] = min(dp[i][j][c[i]], dp[i-1][j][c[i]]);
+        for(int a = 1; a <= m; ++a) {
+          if(a != c[i]) {
+            dp[i][j][c[i]] = min(dp[i][j][c[i]], dp[i-1][j-1][a]);
+          }
+        }
+      }
     }
   }
 
+  long long ans = INF;
   for(int i = 1; i <= m; ++i) {
-    printf("%d\n", ans[i]);
+    if(dp[n][k][i] < ans) {
+      ans = dp[n][k][i];
+    }
   }
+  if(ans == INF) {
+    ans = -1;
+  }
+  cout << ans << endl;
   return 0;
 }

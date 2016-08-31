@@ -1,5 +1,6 @@
+//AC
 
-
+#define DEBUG
 // Author: RejudgeX
 // Level -> CF/TC -> Yellow
 // > -> Ag
@@ -46,52 +47,86 @@ inline void gn(unsigned long long&x){long long t;gn(t);x=t;}
 inline void gn(double&x){double t;scanf("%lf",&t);x=t;}
 inline void gn(long double&x){double t;scanf("%lf",&t);x=t;}
 
-const int N = 5e5 + 10;
+const int N = 1e6 + 10;
+set<int > pSet;
+map<int, int> pCnt;
+long long dist[N];
 
 struct point {
   int idx;
-  int val, type;
+  long long val;
+  int type;
   bool operator<(const point &rhs) const {
     return val < rhs.val || (val == rhs.val && type < rhs.type);
   }
 }p[N];
 
 int main() {
+  #ifdef DEBUG
+  freopen("in.txt", "r", stdin);
+  freopen("out.txt", "w", stdout);
+  #endif
+
   int T, cases = 1;
   long long n, l, r, a, b, c1, c2, m;
   gn(T);
   while(T--) {
     scanf("%lld %lld %lld %lld %lld %lld %lld %lld", &n, &l, &r, &a, &b, &c1, &c2, &m);
-    p[0].idx = p[1].idx = 0;
-    p[0].val = l, p[1].val = r;
-    p[0].type = 0, p[1].type = 1;
+    p[0] = point{0, l, 0};
+    p[1] = point{0, r, 1};
 
     long long x = l, y = r;
     for(int i = 1; i < n; ++i) {
       long long x1 = (a*x + b*y + c1) % m;
-      long long y1 = (a*x + b*y + c2) % m;
-      p[i<<1] = point{i, x1, 0};
-      p[i<<1|1] = point{i, y1, 1};
+      long long y1 = (a*y + b*x + c2) % m;
+      p[i<<1] = point{i, min(x1, y1), 0};
+      p[i<<1|1] = point{i, max(x1, y1), 1};
+      x = x1, y = y1;
     }
     sort(p, p + (n<<1));
 
     int cnt = 0, start = -1;
-    long long ans;
+    int singleStart = -1;
+    long long ans = 0;
+    memset(dist, 0, sizeof(dist));
+
     for(int i = 0; i < (n<<1); ++i) {
       if(p[i].type == 0) {
+        int top = -1;
+        if(pSet.size() == 1) {
+          top = *pSet.begin();
+        }
         if(cnt == 0) {
           start = p[i].val;
+          singleStart = p[i].val;
         }
-        ++cnt;
+        else {
+          if(top != -1) {
+    //        printf("aa %d %lld %d\n", top, p[i].val, singleStart);
+            dist[top] += p[i].val - singleStart;
+          }
+        }
+          pSet.insert(p[i].idx); ++cnt;
       }
       else {
-        --cnt;
+        --cnt; pSet.erase(p[i].idx);
         if(cnt == 0) {
           ans += p[i].val - start + 1;
+          dist[p[i].idx] += p[i].val - singleStart + 1;
+      //    printf("bb %d %lld %d\n", p[i].idx, p[i].val, singleStart);
+        }
+        else if(cnt == 1) {
+          singleStart = p[i].val + 1;
         }
       }
     }
+    long long maxV = -1;
+    for(int i = 0; i < n; ++i) {
+      if(dist[i] > maxV) {
+        maxV = dist[i];
+      }
+    }
+    printf("Case #%d: %lld\n", cases++, ans - maxV);
   }
-  cout << ans << endl;
   return 0;
 }

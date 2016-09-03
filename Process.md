@@ -79,5 +79,9 @@ ZooKeeper的使用场景：
 
 ```
 有关JDBC的介绍：
-[https://www.javacodegeeks.com/2015/03/jdbc%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B.html](https://www.javacodegeeks.com/2015/03/jdbc%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B.html)
-···
+ [https://www.javacodegeeks.com/2015/03/jdbc%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B.html](https://www.javacodegeeks.com/2015/03/jdbc%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B.html)
+```
+
+```
+迭代计算的一些开源框架:
+```

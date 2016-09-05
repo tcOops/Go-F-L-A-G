@@ -6,6 +6,9 @@
 // -> Latency 「2017/5/15」
 
 //POJ 1160
+//简单DP, 考虑到最优情况一定是一个邮局覆盖一片连续区域， 每个邮局之间互不干扰。
+//对于一个邮局而言，就是取中点最优啦。 这样就转化为一个简单的区间DP
+
 #include <iostream>
 #include <cmath>
 #include <cstring>
@@ -46,4 +49,36 @@ inline void gn(unsigned long long&x){long long t;gn(t);x=t;}
 inline void gn(double&x){double t;scanf("%lf",&t);x=t;}
 inline void gn(long double&x){double t;scanf("%lf",&t);x=t;}
 
-const int N =
+const int N = 31;
+const int INF = 0x3f3f3f3f;
+int dp[N][N];
+int d[N], cost[N][N];
+
+int main() {
+  int p, v;
+  gn(p); gn(v);
+  for(int i = 1; i <= p; ++i) {
+    gn(d[i]);
+  }
+  for(int i = 1; i <= p; ++i) {
+    for(int j = i; j <= p; ++j) {
+      int dist = 0;
+      for(int k = i; k <= j; ++k) {
+        dist += abs(d[k] - d[(i+j)/2]);
+      }
+      cost[i][j] = dist;
+    }
+  }
+
+  memset(dp, INF, sizeof(dp));
+  dp[0][0] = 0;
+  for(int i = 1; i <= p; ++i) {
+    for(int j = 1; j <= v; ++j) {
+      for(int k = 0; k < i; ++k) {
+        dp[i][j] = min(dp[i][j], dp[k][j-1] + cost[k+1][i]);
+      }
+    }
+  }
+  cout << dp[p][v];
+  return 0;
+}

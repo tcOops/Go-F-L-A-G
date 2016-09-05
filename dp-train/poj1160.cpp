@@ -49,60 +49,36 @@ inline void gn(unsigned long long&x){long long t;gn(t);x=t;}
 inline void gn(double&x){double t;scanf("%lf",&t);x=t;}
 inline void gn(long double&x){double t;scanf("%lf",&t);x=t;}
 
-const int N = 1010;
+const int N = 31;
 const int INF = 0x3f3f3f3f;
-int dp[N][2];
-
-struct platform {
-  int l, r, h;
-  bool operator <(const platform &rhs) const {
-    returnr h > rhs.h;
-  }
-} p[N];
+int dp[N][N];
+int d[N], cost[N][N];
 
 int main() {
-  int T; gn(T);
-  while(T--) {
-    int n, x, y, h, lim;
-    gn(n); gn(p[0].l); gn(p[0].h); gn(lim);
-    p[0].r = p[0].l;
-
-    int cnt = 1;
-    for(int i = 1; i <= n; ++i) {
-      gn(x); gn(y); gn(h);
-      if(h < p[0].h) {
-        p[cnt].l = x; p[cnt].r = y; p[cnt++].h = h;
-      }
-    }
-    sort(p, p + cnt);
-
-    memset(dp, INF, sizeof(dp));
-    dp[0][0] = dp[0][1] = 0;
-    for(int i = 1; i < cnt; ++i) {
-      for(int j = 0; j < i; ++j) {
-        if(p[j].h - p[i].h <= lim) {
-          if(p[j].l > p[i].l && p[j].l < p[i].r) {
-            dp[i][0] = min(dp[i][0], dp[j][0] + p[j].h - p[i].h + p[j].l - p[i].l);
-            dp[i][1] = min(dp[i][0], dp[j][0] + p[j].h - p[i].h + p[i].r - p[j].l);
-          }
-          if(p[j].r > p[i].l && p[j].r < p[i].r) {
-            dp[i][0] = min(dp[i][0], dp[j][0] + p[j].h - p[i].h + p[j].r - p[i].l);
-            dp[i][1] = min(dp[i][0], dp[j][0] + p[j].h - p[i].h + p[i].r - p[j].r);
-          }
-        }
-      }
-    }
-
-    int ans = INF;
-    for(int i = cnt - 1; i >= 0 && p[i].h <= lim; ++i) {
-      if(dp[i][0] < ans) {
-        ans = dp[i][0];
-      }
-      if(dp[i][1] < ans) {
-        ans = dp[i][1];
-      }
-    }
-    cout << ans << endl;
+  int p, v;
+  gn(p); gn(v);
+  for(int i = 1; i <= p; ++i) {
+    gn(d[i]);
   }
+  for(int i = 1; i <= p; ++i) {
+    for(int j = i; j <= p; ++j) {
+      int dist = 0;
+      for(int k = i; k <= j; ++k) {
+        dist += abs(d[k] - d[(i+j)/2]);
+      }
+      cost[i][j] = dist;
+    }
+  }
+
+  memset(dp, INF, sizeof(dp));
+  dp[0][0] = 0;
+  for(int i = 1; i <= p; ++i) {
+    for(int j = 1; j <= v; ++j) {
+      for(int k = 0; k < i; ++k) {
+        dp[i][j] = min(dp[i][j], dp[k][j-1] + cost[k+1][i]);
+      }
+    }
+  }
+  cout << dp[p][v];
   return 0;
 }

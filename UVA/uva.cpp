@@ -50,9 +50,31 @@ int dp[N];
 int main() {
   dp[0] = 1;
   dp[1] = 1;
-  for(int i = 2; i < 100; ++i) {
+  for(int i = 2; i <= 40; ++i) {
     dp[i] = dp[i-1] + dp[i-2];
   }
 
-  
+  int T; gn(T);
+  while(T--) {
+    int n; gn(n);
+    string ans = "";
+    for(int i = 40; i >= 1; --i) {
+      if(dp[i] > n) {
+        ans += "0";
+        continue;
+      }
+      ans += "1";
+      n -= dp[i];
+    }
+
+    int i;
+    for(i = 0; i < ans.size(); ++i) {
+      if(ans[i] != '0') break;
+    }
+    for(; i < ans.size(); ++i) {
+      printf("%c", ans[i]);
+    }
+    puts("");
+  }
+  return 0;
 }

@@ -29,15 +29,13 @@ typedef vector<int> VI;
 typedef long long ll;
 typedef pair<int,int> PII;
 const ll MOD = 1000000007;
-const int N = 100010;
-
-ll powmod(ll a,ll b) {ll res=1;a%=mod;for(;b;b>>=1){if(b&1)res=res*a%mod;a=a*a%mod;}return res;}
+ll powmod(ll a,ll b) {ll res=1;a%=MOD;for(;b;b>>=1){if(b&1)res=res*a%MOD;a=a*a%MOD;}return res;}
 // head
 
 inline void gn(long long &x){
-	int sg=1;
-  char c;while(((c=getchar())<'0'||c>'9')&&c!='-');c=='-'?(sg=-1,x=0):(x=c-'0');
-	while((c=getchar())>='0'&&c<='9')x=x*10+c-'0';x*=sg;
+    int sg=1;
+    char c;while(((c=getchar())<'0'||c>'9')&&c!='-');c=='-'?(sg=-1,x=0):(x=c-'0');
+    while((c=getchar())>='0'&&c<='9')x=x*10+c-'0';x*=sg;
 }
 
 inline void gn(int&x){long long t;gn(t);x=t;}
@@ -45,6 +43,36 @@ inline void gn(unsigned long long&x){long long t;gn(t);x=t;}
 inline void gn(double&x){double t;scanf("%lf",&t);x=t;}
 inline void gn(long double&x){double t;scanf("%lf",&t);x=t;}
 
-const int N = 1010;
-vector<int > g[N];
-int in[N];
+const int N = 200010;
+int vis[N];
+int a[N], pre[N], ans;
+
+void dfs(int k, int cnt) {
+    if(vis[k] == 1) {
+   //     printf("%d %d %d \n", k, cnt, pre[k]);
+        ans = min(ans, cnt - pre[k]);
+    }
+    else if(vis[k] == 0){
+        vis[k] = 1; pre[k] = cnt;
+        dfs(a[k], cnt + 1);
+        vis[k] = 2;
+    }
+}
+
+int main() {
+    int n; gn(n);
+    for(int i = 1; i <= n; ++i) {
+        gn(a[i]);
+    }
+    
+    ans = n;
+    memset(vis, 0, sizeof(vis));
+    for(int i = 1; i <= n; ++i) {
+        if(vis[i] == 0) {
+            dfs(i, 0);
+        }
+    }
+    cout << ans << endl;
+    return 0;
+}
+

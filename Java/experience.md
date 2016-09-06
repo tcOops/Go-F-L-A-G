@@ -36,5 +36,5 @@ Map, HashMap, HashTable, HashSet的区别:
 
 ```
 Java语言内置的语言级同步原语: synchronized
-可参考: [http://www.cnblogs.com/devinzhang/archive/2011/12/14/2287675.html](http://www.cnblogs.com/devinzhang/archive/2011/12/14/2287675.html)
 ```
+可参考: [http://www.cnblogs.com/devinzhang/archive/2011/12/14/2287675.html](http://www.cnblogs.com/devinzhang/archive/2011/12/14/2287675.html)

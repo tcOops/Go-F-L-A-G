@@ -18,7 +18,8 @@ Object类中有clone方法， 但是要实现deep-copy，以及使用clone时，
 ```
 
 ```
-@override, 相当于一种注解(区别于wrapper,嵌套函数)，告诉编译器该方法只是一个重写方法， 需要区别重写(都不能变)与重载(参数类型，个数或者返回值类型可以变)。
+@override, 相当于一种注解(区别于wrapper,嵌套函数)，告诉编译器该方法只是一个重写方法，
+需要区别重写(都不能变)与重载(参数类型，个数或者返回值类型可以变)。
 @interface
 ```
 
@@ -35,6 +36,5 @@ Map, HashMap, HashTable, HashSet的区别:
 
 ```
 Java语言内置的语言级同步原语: synchronized
-可参考: [http://www.cnblogs.com/devinzhang/archive/2011/12/14/2287675.html]
-(http://www.cnblogs.com/devinzhang/archive/2011/12/14/2287675.html)
+可参考: [http://www.cnblogs.com/devinzhang/archive/2011/12/14/2287675.html](http://www.cnblogs.com/devinzhang/archive/2011/12/14/2287675.html)
 ```

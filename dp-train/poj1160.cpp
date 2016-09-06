@@ -49,7 +49,7 @@ inline void gn(unsigned long long&x){long long t;gn(t);x=t;}
 inline void gn(double&x){double t;scanf("%lf",&t);x=t;}
 inline void gn(long double&x){double t;scanf("%lf",&t);x=t;}
 
-const int N = 31;
+const int N = 310;
 const int INF = 0x3f3f3f3f;
 int dp[N][N];
 int d[N], cost[N][N];

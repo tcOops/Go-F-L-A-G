@@ -24,11 +24,17 @@ Object类中有clone方法， 但是要实现deep-copy，以及使用clone时，
 
 ```
 Maven包依赖管理， 类似于pip或者npm, 使用pom文件来说明需要哪些外界的包依赖(至于jdk自身的包会自动导入)，
-如何将本地的包全LAN共享，还需要探究
+如何将本地的包全LAN共享，还需要探究 (在~/.m2文件夹下添入一个settings.xml的配置文件)
 ```
 
 ```
 Map, HashMap, HashTable, HashSet的区别:
  1.Hashtable继承自Dictionary类，而HashMap继承自AbstractMap类, 但二者都实现了Map接口。
  2.HashTable是Sync的，所以线程安全， 而HashMap并不是。
+```
+
+```
+Java语言内置的语言级同步原语: synchronized
+可参考: [http://www.cnblogs.com/devinzhang/archive/2011/12/14/2287675.html]
+(http://www.cnblogs.com/devinzhang/archive/2011/12/14/2287675.html)
 ```

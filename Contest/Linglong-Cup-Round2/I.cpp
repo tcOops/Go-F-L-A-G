@@ -1,13 +1,13 @@
 //AC
+
 // Author: RejudgeX
 // Level -> CF/TC -> Yellow
 // > -> Ag
 // -> F/L/A/G
 // -> Latency 「2017/5/15」
 
-//POJ 1661
-//经典DP题， 用记忆化搜索写起来比较方便
-
+//利用二项式展开， 提取公式 sigma(C(n,2i)*k^(2i)) = ((k+1)^n + (k-1)^n) / 2;
+//注意除4再取模的话， 需要求逆模
 
 #include <iostream>
 #include <cmath>
@@ -33,9 +33,8 @@ using namespace std;
 typedef vector<int> VI;
 typedef long long ll;
 typedef pair<int,int> PII;
-const ll mod = 1000000007;
-
-ll powmod(ll a,ll b) {ll res=1;a%=mod;for(;b;b>>=1){if(b&1)res=res*a%mod;a=a*a%mod;}return res;}
+const ll MOD = 1000000007;
+ll powmod(ll a,ll b) {ll res=1;a%=MOD;for(;b;b>>=1){if(b&1)res=res*a%MOD;a=a*a%MOD;}return res;}
 // head
 
 inline void gn(long long &x){
@@ -49,4 +48,41 @@ inline void gn(unsigned long long&x){long long t;gn(t);x=t;}
 inline void gn(double&x){double t;scanf("%lf",&t);x=t;}
 inline void gn(long double&x){double t;scanf("%lf",&t);x=t;}
 
-const int N = 
+long long fastMul(long long n, long long k) {
+  long long ret = 1;
+  while(k) {
+    if(k & 1) {
+      ret = ret * n % MOD;
+    }
+    n = n * n % MOD;
+    k >>= 1;
+  }
+  return ret;
+}
+
+int extend_gcd(long long a, long long b, long long d, long long &x, long long &y) {
+  if(b == 0) {
+    d = a; x = 1, y = 0;
+  }
+  else {
+    extend_gcd(b, a%b, d, y, x);
+    y-= x*(a/b);
+  }
+}
+
+int main() {
+  int T; gn(T);
+  int cases = 1;
+  while(T--) {
+    long long n;
+    gn(n);
+    long long ans = 0;
+    ans = (ans + fastMul(6, n))%MOD;
+    ans = (fastMul(4, n)*2%MOD + ans)%MOD;
+    ans = (fastMul(2, n) + ans)%MOD;
+    long long d, x, y;
+    long long rev = extend_gcd(4, MOD, d, x, y);
+    printf("Case #%d: %lld\n", cases++, ans*x%MOD);
+  }
+  return 0;
+}

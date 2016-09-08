@@ -67,7 +67,7 @@ int main() {
     int l, r;
     scanf("%d %d", &l, &r);
     int ans = 1e9, id;
-    for(int i = l; i < 2*l && i <= r; ++i) {
+    for(int i = l; i <= r; ++i) {
         if(phi[i] < ans) {
             ans = phi[i];
             id = i;
@@ -76,4 +76,6 @@ int main() {
     printf("%d\n", id);
  //   solve(l, r);
     return 0;
+}
+urn 0;
 }

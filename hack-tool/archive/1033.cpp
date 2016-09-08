@@ -1,96 +1,81 @@
-// Author:tcOops
-// Level -> CF/TC -> Yellow
-// > -> Ag
-// -> F/L/A/G
-// -> Latency 「2017/5/15」
-
-#include <cstdio>
-#include <cstring>
-#include <algorithm>
+//提交地址: http://hihocoder.com/problemset/problem/1162
+//数位DP
+ 
+#include<iostream>
+#include<cstring>
 using namespace std;
-const int N = 21;
-const int MOD = 1e9 + 7;
-const int OFFSET = 210;
 
-long long dig[N], base[N];
+#define ll long long int
+#define rep(a,b,c) for(int a = b; a < c; a++)
 
-struct google {
-    long long n, sum;
-    google() {
-        n = -1, sum = 0;
-    }
+const int mod = 1000000007;
+
+struct node{
+    ll s,n;
 };
-google dp[N][N][420];
+
+node dp[21][20][400];
+
+int bits[21];
+ll base[21];
 
 
-google solve(int len, int digital, long long sum, bool isPrefix0, bool limit) {
- //   printf("%d %d %lld\n", len, digital, sum);
-    google ans, res;
-    ans.n = 0, ans.sum = 0;
-    
-    if(len < 0) {
-        return ans;
+node dfs(int len, int dig, bool begin_zero, bool end_flag, int sum){
+    node t;
+    t.s = 0, t.n = 0;
+    //超过边界值
+    if(len <= 0 || len >= 20 || dig < 0 || dig > 9 || sum < -200 || sum >= 200)
+        return t;
+    //返回已有的DP结果，即记忆化搜索
+    if(!end_flag && dp[len][dig + (begin_zero?0:10)][sum+200].n != -1)
+        return dp[len][dig + (begin_zero?0:10)][sum+200];
+    //长度只有一位，就不需要枚举下一位了，直接讨论返回即可
+    if(len == 1){
+        if(dig != sum)
+        return t;
+        t.n = 1, t.s = sum;
+        return t;
     }
-    
-    if(!limit && isPrefix0 && dp[len][digital][sum+OFFSET].n != -1) {
-        return dp[len][digital][sum+OFFSET];
-    }
-    
-    if(len == 0) {
-        if(digital == sum) {
-            ans.sum = (long long)sum;
-            ans.n = (long long)1;
-            return ans;
+    //开始枚举下一位的数字
+    int end = end_flag? bits[len-2] : 9;
+    int newsum = dig - sum;
+    node tmp;
+    rep(j,0,end + 1){
+        if(!begin_zero){
+            tmp = dfs(len-1, j, j!=0, end_flag&& (j == end), sum);
         }
-        return ans;
-    }
-    
-    int up = limit ? dig[len-1] : 9;
-    long long new_sum = digital - sum;
-    
-    for(int i = 0; i <= up; ++i) {
-        if(!isPrefix0) {
-            res = solve(len-1, i, sum, i != 0, limit && (i == up));
+        else{
+            tmp = dfs(len-1, j, true, end_flag&& (j == end), newsum);
         }
-        else {
-            res = solve(len-1, i, new_sum, true, limit && (i == up));
-        }
-        
-        ans.n += res.n;
-        ans.sum = ((ans.sum + res.sum) % MOD + (res.n*digital) % MOD * base[len] % MOD + MOD) % MOD;
+        //将tmp的值累加到t上
+        t.n += tmp.n;
+        t.s = ((t.s + tmp.s)%mod + ((tmp.n * dig )%mod * base[len-1])%mod)%mod;
     }
-    
-    //printf("%lld %lld\n", ans.n, ans.sum);
-    if(!limit && isPrefix0) {
-        dp[len][digital][sum+OFFSET] = ans;
-    }
-    return ans;
+    if(!end_flag) dp[len][dig + (begin_zero?0:10)][sum+200] = t;
+    return t;
 }
 
-
-long long go(long long n, long long k) {
-    if(n <= 0) {
-        return 0;
-    }
-    
-    int len = 0;
-    while(n) {
-        dig[len++] = n%10;
+ll solve(ll n, ll s){
+    if(n <= 0)
+    return 0;
+    int l = 0;
+    rep(i,0,21) bits[i] = 0;
+    while(n){
+        bits[l++]= n%10;
         n /= 10;
     }
-    dig[len++] = 0;
-    return solve(len-1, 0, k, false, true).sum;
+    return dfs(l+1,0,false,true,s).s;
 }
 
-
-int main () {
-    long long l, r, k;
+int main(){
+    ll l, r, s;
+    node t;
+    t.n = -1;
+    t.s = 0;
+    rep(i,0,21) rep(j,0,20) rep(k,0,400) dp[i][j][k] = t;
     base[0] = 1;
-    for(int i = 1; i < N; ++i) {
-        base[i] = (base[i-1] * 10) % MOD;
-    }
-    
-    scanf("%lld %lld %lld", &l, &r, &k);
-    printf("%lld\n", (go(r, k) - go(l-1, k) + MOD) % MOD);
+    rep(i,1,21) base[i] = (base[i-1]*10)%mod;
+    cin >> l >> r >> s;
+    cout << (solve(r,s) - solve(l-1,s) + mod)%mod << endl;
     return 0;
 }

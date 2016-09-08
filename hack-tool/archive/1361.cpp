@@ -44,40 +44,33 @@ inline void gn(unsigned long long&x){long long t;gn(t);x=t;}
 inline void gn(double&x){double t;scanf("%lf",&t);x=t;}
 inline void gn(long double&x){double t;scanf("%lf",&t);x=t;}
 
-const int N = 1e6 + 10;
-int fib[1010];
-long long dp[1010];
+
+bool vis[30];
 
 int main() {
-    ios_base::sync_with_stdio(0);
-    int n; gn(n);
-    fib[1] = 1, fib[2] = 1;
-    int cnt;
-    for(int i = 3; ; ++i) {
-        fib[i] = fib[i-1] + fib[i-2];
-        if(fib[i] > 1e5) break;
-        cnt = i;
-    }
-    
-    for(int i = 1; i <= n; ++i) {
-        int x; gn(x);
-        if(x == 1) {
-            dp[2] = (dp[2] + dp[1]) % MOD;
-            ++dp[1];
+    string word, ans = "";
+    cin >> word;
+    for(int i = 0; i < word.size(); ++i) {
+        char tmp = word[i];
+        if(word[i] == 'J') {
+            tmp = 'I';
         }
-        else {
-            int pos = lower_bound(fib+1, fib+cnt+1, x) - fib;
-            if(fib[pos] == x) {
-                dp[pos] = (dp[pos-1] + dp[pos]) % MOD;
-            }
+        if(!vis[tmp-'A']) {
+            ans += tmp;
+            vis[tmp-'A'] = true;
+        }
+    }
+    for(int i = 0; i < 26; ++i) {
+        if(!vis[i] && 'A' + i != 'J') {
+            ans += 'A' + i;
         }
     }
     
-    long long ans = 0;
-    for(int i = 1; fib[i] <= 1e5; ++i) {
-    //    printf("%d %d\n", i, dp[i]);
-        ans = (ans + dp[i]) % MOD;
+    for(int i = 0; i < 25; ++i) {
+        printf("%c", ans[i]);
+        if(i && (i+1) % 5 == 0) {
+            puts("");
+        }
     }
-    cout << ans << endl;
     return 0;
 }

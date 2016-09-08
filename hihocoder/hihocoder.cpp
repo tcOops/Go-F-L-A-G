@@ -1,81 +1,95 @@
-//AC
-// Author: RejudgeX
-// Level -> CF/TC -> Yellow
-// > -> Ag
-// -> F/L/A/G
-// -> Latency 「2017/5/15」
-
-//Sb题
-#include <iostream>
-#include <cmath>
-#include <cstring>
-#include <string>
-#include <cstdio>
-#include <set>
-#include <algorithm>
-#include <queue>
-#include <vector>
-#include <map>
-#include <ctime>
-//#include <bits/stdc++.h>
+#include<iostream>
+#include<cstdio>
+#include<cstring>
+#include<cmath>
+#include<algorithm>
+#include<map>
+#include<set>
+#include<queue>
+#include<stack>
+#include<vector>
 using namespace std;
-#define rep(i,a,n) for (int i=a;i<n;i++)
-#define per(i,a,n) for (int i=n-1;i>=a;i--)
-#define pb push_back
-#define mp make_pair
-#define all(x) (x).begin(),(x).end()
-#define SZ(x) ((int)(x).size())
-#define fi first
-#define se second
-typedef vector<int> VI;
 typedef long long ll;
-typedef pair<int,int> PII;
-const ll mod = 1000000007;
+#define mem(name,value) memset(name,value,sizeof(name))
+#pragma comment(linker, "/STACK:102400000,102400000")
+#define mp(a,b) make_pair(a,b)
+#define pb push_back
+#define lson l,m,rt<<1
+#define rson m+1,r,rt<<1|1
+const int maxn=110,inf=0x3f3f3f3f,mod=1000000007;
 
-ll powmod(ll a,ll b) {ll res=1;a%=mod;for(;b;b>>=1){if(b&1)res=res*a%mod;a=a*a%mod;}return res;}
-// head
+ll dp[maxn][50],f[500][50][50];
+int digit[maxn];
+char s[maxn];
+int n1,n2,n,m,t;
+vector<int>len;
 
-inline void gn(long long &x){
-    int sg=1;
-    char c;while(((c=getchar())<'0'||c>'9')&&c!='-');c=='-'?(sg=-1,x=0):(x=c-'0');
-    while((c=getchar())>='0'&&c<='9')x=x*10+c-'0';x*=sg;
+ll dfs(int pos,int j){
+    //cout<<pos<<" "<<j<<" "<<x<<" "<<y<<endl;
+    if(pos==t) return j==0;
+    if(dp[pos][j]!=-1) return dp[pos][j];
+
+    int x=lower_bound(len.begin(),len.end(),pos+1)-len.begin();
+    int y=upper_bound(len.begin(),len.end(),pos+1)-len.begin();
+
+    ll ans=0;
+    int e=(len.size()-x)*9+j;
+    for(int s=digit[pos];s<=e;s+=10){
+        if(s<j) continue;
+        ans=(ans+f[s-j][len.size()-y][y-x]*dfs(pos+1,s/10))%mod;
+    }
+
+    return dp[pos][j]=ans;
 }
 
-inline void gn(int&x){long long t;gn(t);x=t;}
-inline void gn(unsigned long long&x){long long t;gn(t);x=t;}
-inline void gn(double&x){double t;scanf("%lf",&t);x=t;}
-inline void gn(long double&x){double t;scanf("%lf",&t);x=t;}
+int main()
+{
+    for(int x=0;x<50;x++)
+        f[0][x][0]=1;
 
-int main() {
-  int n, m;
-  gn(n); gn(m);
-  if(m == 0) {
-    for(int i = 0; i < n; ++i) {
-      printf("0");
+    for(int s=1;s<500;s++){
+        for(int x=0;x<50;x++)
+        for(int y=0;y<50;y++){
+            if(x*9+y*9<s) continue;
+            if(x){
+                for(int i=0;i<=9;i++){
+                    if(s>=i) f[s][x][y]=(f[s][x][y]+f[s-i][x-1][y])%mod;
+                }
+            }else{
+                for(int i=1;i<=9;i++){
+                    if(s>=i) f[s][x][y]=(f[s][x][y]+f[s-i][x][y-1])%mod;
+                }
+            }
+        }
     }
-  }
-  else if(n > m) {
-    for(int i = 0; i < m; ++i) {
-      printf("01");
+
+    //cout<<f[2][0][1]<<endl;
+    while(scanf("%s",&s)!=EOF){
+        int nn=strlen(s);
+        int sum=0;
+        len.clear();
+        for(int i=0;i<nn;i++){
+            if(s[i]=='+' || s[i]=='='){
+                len.pb(sum);
+                sum=0;
+            }else sum++;
+        }
+        t=0;
+        for(int i=nn-1;s[i]!='=';i--)
+            digit[t++]=s[i]-'0';
+        sort(len.begin(),len.end());
+
+        //for(int i=0;i<len.size();i++) cout<<len[i]<<endl;
+
+        if(*len.rbegin()>t){
+            cout<<0<<endl;
+            continue;
+        }
+        // cout<<*len.rbegin()<<endl;
+        // cout<<t<<" "<<n<<" "<<m<<endl;
+        // for(int i=0;i<t;i++) cout<<digit[i]<<endl;
+        mem(dp,-1);
+        ll ans=dfs(0,0);
+        cout<<ans<<endl;
     }
-    for(int i = 0; i < n - m; ++i) {
-      printf("0");
-    }
-  }
-  else if(n == m) {
-    for(int i = 0; i < m; ++i) {
-      printf("01");
-    }
-  }
-  else if(m == n + 1) {
-    printf("1");
-    for(int i = 0; i < n; ++i) {
-      printf("01");
-    }
-  }
-  else {
-    printf("NO");
-  }
-  puts("");
-  return 0;
 }

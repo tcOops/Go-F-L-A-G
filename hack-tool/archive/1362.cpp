@@ -34,50 +34,69 @@ ll powmod(ll a,ll b) {ll res=1;a%=MOD;for(;b;b>>=1){if(b&1)res=res*a%MOD;a=a*a%M
 // head
 
 inline void gn(long long &x){
-    int sg=1;
-    char c;while(((c=getchar())<'0'||c>'9')&&c!='-');c=='-'?(sg=-1,x=0):(x=c-'0');
-    while((c=getchar())>='0'&&c<='9')x=x*10+c-'0';x*=sg;
+	int sg=1;
+  char c;while(((c=getchar())<'0'||c>'9')&&c!='-');c=='-'?(sg=-1,x=0):(x=c-'0');
+	while((c=getchar())>='0'&&c<='9')x=x*10+c-'0';x*=sg;
 }
 
 inline void gn(int&x){long long t;gn(t);x=t;}
 inline void gn(unsigned long long&x){long long t;gn(t);x=t;}
 inline void gn(double&x){double t;scanf("%lf",&t);x=t;}
 inline void gn(long double&x){double t;scanf("%lf",&t);x=t;}
+const int N = 1e3 + 10;
+const int INF = 0x3f3f3f3f;
 
-const int N = 1e6 + 10;
-int fib[1010];
-long long dp[1010];
+int h[N];
+int n, m, L;
+
+bool check(int x) {
+  for(int i = 1; i <= n; ++i) {
+    bool suc = true;
+
+    int left = m;
+    for(int j = i; j < i + n && suc;) {
+      if(h[j] >= x) {
+        ++j;
+        continue;
+      }
+      if(left == 0) {
+        suc = false;
+        break;
+      }
+      j += L;
+      --left;
+    }
+    if(suc) {
+      return true;
+    }
+  }
+  return false;
+}
 
 int main() {
-    ios_base::sync_with_stdio(0);
-    int n; gn(n);
-    fib[1] = 1, fib[2] = 1;
-    int cnt;
-    for(int i = 3; ; ++i) {
-        fib[i] = fib[i-1] + fib[i-2];
-        if(fib[i] > 1e5) break;
-        cnt = i;
+  gn(n); gn(m); gn(L);
+  int l = INF, r = 0;
+  for(int i = 1; i <= n; ++i) {
+    gn(h[i]);
+    h[i+n] = h[i];
+    if(h[i] > r) {
+      r = h[i];
     }
-    
-    for(int i = 1; i <= n; ++i) {
-        int x; gn(x);
-        if(x == 1) {
-            dp[2] = (dp[2] + dp[1]) % MOD;
-            ++dp[1];
-        }
-        else {
-            int pos = lower_bound(fib+1, fib+cnt+1, x) - fib;
-            if(fib[pos] == x) {
-                dp[pos] = (dp[pos-1] + dp[pos]) % MOD;
-            }
-        }
+    if(h[i] < l) {
+      l = h[i];
     }
-    
-    long long ans = 0;
-    for(int i = 1; fib[i] <= 1e5; ++i) {
-    //    printf("%d %d\n", i, dp[i]);
-        ans = (ans + dp[i]) % MOD;
+  }
+
+  while(l < r) {
+//    cout << l << " " << r << endl;
+    int mid = (l + r + 1) >> 1;
+    if(check(mid)) {
+      l = mid;
     }
-    cout << ans << endl;
-    return 0;
+    else {
+      r = mid - 1;
+    }
+  }
+  printf("%d\n", l);
+  return 0;
 }

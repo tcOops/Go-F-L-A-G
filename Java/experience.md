@@ -38,3 +38,24 @@ Map, HashMap, HashTable, HashSet的区别:
 Java语言内置的语言级同步原语: synchronized
 ```
 可参考: [http://www.cnblogs.com/devinzhang/archive/2011/12/14/2287675.html](http://www.cnblogs.com/devinzhang/archive/2011/12/14/2287675.html)
+
+
+```
+关于JAVA中的枚举类型，　也是可以带参数的，　具体用法请参考
+```
+[http://blog.csdn.net/zz_mm/article/details/7634442](http://blog.csdn.net/zz_mm/article/details/7634442)
+
+
+```
+关于JAVA中final | static关键字的解析；　注意到private实际上是一种隐式的final用法
+```
+[http://lavasoft.blog.51cto.com/62575/18771/](http://lavasoft.blog.51cto.com/62575/18771/)
+
+
+```
+Context:　一个运行容器,
+Mgr: Manager
+Design Pattern: 将接口集中在Context中，统一调用，也提供单个功能的接口，接口抽象的层次一层一层，
+先定义最基本的接口，　然后继承该接口定义下层接口。　类都去实现该接口，然后由接口对function进行统一调用。
+ScheduleContext接口是一个包含多个agent的接口，而MasterScheduleContext实现了ScheduleContext接口，这是一个大的运行容器类，包含schedule, task, execute, persistence等function.
+```

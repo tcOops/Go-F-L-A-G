@@ -2,8 +2,10 @@
 // Level -> CF/TC -> Yellow
 // > -> Ag
 // -> F/L/A/G
-// -> Latency 「2017/5/15」
+// -> Latency 「2_017/5/15」
 
+//Google mock-contest 1
+//RejudgeX: 2_016/8/3 22:35 - 24:00
 #include <iostream>
 #include <cmath>
 #include <cstring>
@@ -29,10 +31,8 @@ typedef vector<int> VI;
 typedef long long ll;
 typedef pair<int,int> PII;
 const ll MOD = 1000000007;
-
 ll powmod(ll a,ll b) {ll res=1;a%=MOD;for(;b;b>>=1){if(b&1)res=res*a%MOD;a=a*a%MOD;}return res;}
 // head
-
 inline void gn(long long &x){
     int sg=1;
     char c;while(((c=getchar())<'0'||c>'9')&&c!='-');c=='-'?(sg=-1,x=0):(x=c-'0');
@@ -44,40 +44,54 @@ inline void gn(unsigned long long&x){long long t;gn(t);x=t;}
 inline void gn(double&x){double t;scanf("%lf",&t);x=t;}
 inline void gn(long double&x){double t;scanf("%lf",&t);x=t;}
 
-const int N = 1e6 + 10;
-int fib[1010];
-long long dp[1010];
+const int N = 1e5 + 10;
+int good[11][11];
+int dp[N];
+int n, m;
+
+void _01Bag(int x, int y) {
+  for(int i = m; i >= x; --i) {
+    dp[i] = max(dp[i], dp[i-x] + y);
+  }
+}
+
+void fullBag(int x, int y) {
+  for(int i = m; i <= x; ++i) {
+    dp[i] = max(dp[i], dp[i-x] + y);
+  }
+}
+
+void multiBag(int x, int y, int z) {
+  if(x*z >= m) {
+    fullBag(x, y);
+  }
+  else {
+    int base = 1;
+    while(base < z) {
+      _01Bag(x*base, y*base);
+      z -= base;
+      base <<= 1;
+    }
+    _01Bag(x*z, y*z);
+  }
+}
 
 int main() {
-    ios_base::sync_with_stdio(0);
-    int n; gn(n);
-    fib[1] = 1, fib[2] = 1;
-    int cnt;
-    for(int i = 3; ; ++i) {
-        fib[i] = fib[i-1] + fib[i-2];
-        if(fib[i] > 1e5) break;
-        cnt = i;
+  gn(n); gn(m);
+
+  for(int i = 1; i <= n; ++i) {
+    int x, y;
+    gn(x); gn(y);
+    good[x][y]++;
+  }
+
+  for(int i = 1; i <= 10; ++i) {
+    for(int j = 1; j <= 10; ++j) {
+      if(good[i][j]) {
+        multiBag(i, j, good[i][j]);
+      }
     }
-    
-    for(int i = 1; i <= n; ++i) {
-        int x; gn(x);
-        if(x == 1) {
-            dp[2] = (dp[2] + dp[1]) % MOD;
-            ++dp[1];
-        }
-        else {
-            int pos = lower_bound(fib+1, fib+cnt+1, x) - fib;
-            if(fib[pos] == x) {
-                dp[pos] = (dp[pos-1] + dp[pos]) % MOD;
-            }
-        }
-    }
-    
-    long long ans = 0;
-    for(int i = 1; fib[i] <= 1e5; ++i) {
-    //    printf("%d %d\n", i, dp[i]);
-        ans = (ans + dp[i]) % MOD;
-    }
-    cout << ans << endl;
-    return 0;
+  }
+  cout << dp[m] << endl;
+  return 0;
 }

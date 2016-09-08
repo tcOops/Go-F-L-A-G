@@ -4,6 +4,11 @@
 // -> F/L/A/G
 // -> Latency 「2017/5/15」
 
+//SJTU 1131
+//将背包问题转化为最短路问题， 跑spfa解决
+//这里寻求a[1,n]中最小的值m， d[i]表示能表示的数中最小的x，满足x%m==i
+//显然，当d[x%m] <= x,是有解的， 否则无解
+//至于如何连边是很显然的， 时间复杂度O(m*n*log(n))（堆优化的dijkstra)
 #include <iostream>
 #include <cmath>
 #include <cstring>
@@ -46,10 +51,10 @@ inline void gn(long double&x){double t;scanf("%lf",&t);x=t;}
 
 typedef pair<int,int>P;
 const int N=50010,inf=1000000010;
-long long n,m,i,a[N];
+int n,m,i,a[N];
 bool vis[N];
 queue<int > q;
-long long d[N];
+int d[N];
 P t;
 priority_queue<P,vector<P>,greater<P> >Q;
 long long x;
@@ -86,14 +91,6 @@ int main(){
         }
       }
     }
-
-/*
-    while(!Q.empty()){
-        t=Q.top();Q.pop();
-        if(d[t.second]<t.first)continue;
-        for(x=t.second,i=0;i<n;i++)if(d[x]+a[i]<d[(x+a[i])%m])Q.push(P(d[(x+a[i])%m]=d[x]+a[i],(x+a[i])%m));
-    }
-*/
 
     for(gn(n);n--;puts(d[x%m]<=x?"Yes":"No")) gn(x);
     return 0;

@@ -57,5 +57,6 @@ Context:　一个运行容器,
 Mgr: Manager
 Design Pattern: 将接口集中在Context中，统一调用，也提供单个功能的接口，接口抽象的层次一层一层，
 先定义最基本的接口，　然后继承该接口定义下层接口。　类都去实现该接口，然后由接口对function进行统一调用。
-ScheduleContext接口是一个包含多个agent的接口，而MasterScheduleContext实现了ScheduleContext接口，这是一个大的运行容器类，包含schedule, task, execute, persistence等function.
+ScheduleContext接口是一个包含多个agent的接口，而MasterScheduleContext实现了ScheduleContext接口，
+这是一个大的运行容器类，包含schedule, task, execute, persistence等function.
 ```

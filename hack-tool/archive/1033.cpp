@@ -24,7 +24,7 @@ node dfs(int len, int dig, bool begin_zero, bool end_flag, int sum){
     node t;
     t.s = 0, t.n = 0;
     //超过边界值
-    if(len <= 0 || len >= 20 || dig < 0 || dig > 9 || sum < -200 || sum >= 200)
+    if(len <= 0)
         return t;
     //返回已有的DP结果，即记忆化搜索
     if(!end_flag && dp[len][dig + (begin_zero?0:10)][sum+200].n != -1)
@@ -77,5 +77,7 @@ int main(){
     rep(i,1,21) base[i] = (base[i-1]*10)%mod;
     cin >> l >> r >> s;
     cout << (solve(r,s) - solve(l-1,s) + mod)%mod << endl;
+    return 0;
+}solve(r,s) - solve(l-1,s) + mod)%mod << endl;
     return 0;
 }

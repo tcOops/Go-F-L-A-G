@@ -1,52 +1,45 @@
 #include <cstdio>
 #include <cstring>
-#define minab(a, b) ((a) < (b) ? (a) : (b))
+#include <vector>
 using namespace std;
-int dp[1000010][23];
-int a[1000010];
+#define maxab(a, b) ((a) > (b) ? (a) : (b))
 
-void pre(int n) {
-    for(int i = 0; i < n; ++i) {
-        dp[i][0] = a[i];
-    }
-    
-    for(int j = 1; j < 22; ++j){
-        for(int k = 0; k + (1<<j) - 1 <= n; ++k) {
-            dp[k][j] = minab(dp[k][j-1], dp[k+(1<<(j-1))][j-1]);
-        }
-    }
-}
+vector<int > g[110];
+int score[110];
+int dp[110][110];
 
-void solve(int left, int right) {
-    left--, right--;
-    int v = right - left + 1;
-    int l = 0, r = 30;
-    while(l < r) {
-        int mid = (l+r+1) >> 1;
-        if((1<<mid) > v){
-            r = mid - 1;
+void solve(int u, int fa, int m) {
+    for(int i = 0; i < g[u].size(); ++i) {
+        int v = g[u][i];
+        if(v == fa) {
+            continue;
         }
-        else{
-            l = mid;
+        
+        solve(v, u, m);
+        for(int j = m; j >= 2; --j) {
+            for(int k = 1; k < j; ++k) {
+                dp[u][j] = maxab(dp[v][k] + dp[u][j-k], dp[u][j]);
+            }
         }
     }
-    
-    int ans = minab(dp[left][l], dp[right-(1<<l)+1][l]);
-    printf("%d\n", ans);
 }
 
 int main() {
     int n, m;
-    scanf("%d", &n);
-    for(int i = 0; i < n; ++i) {
-        scanf("%d", &a[i]);
+    scanf("%d %d", &n, &m);
+    for(int i = 1; i <= n; ++i) {
+        scanf("%d", &dp[i][1]);
     }
-    pre(n);
-    scanf("%d", &m);
-    for(int i = 0; i < m; ++i) {
-        int l, r;
-        scanf("%d %d", &l, &r);
-        solve(l, r);
+    for(int i = 0; i < n-1; ++i) {
+        int x, y;
+        scanf("%d %d", &x, &y);
+        g[x].push_back(y);
+        g[y].push_back(x);
     }
+    
+    solve(1, -1, m);
+    printf("%d\n", dp[1][m]);
     return 0;
 }
+
+

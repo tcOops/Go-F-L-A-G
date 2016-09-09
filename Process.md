@@ -85,3 +85,17 @@ ZooKeeper的使用场景：
 ```
 迭代计算的一些开源框架:
 ```
+
+##azkaban文档：
+[http://azkaban.github.io/azkaban/docs/latest/](http://azkaban.github.io/azkaban/docs/latest/)
+
+
+```
+Java Executors(线程池)
+Java DelayQueue的使用
+```
+
+```
+Java内部类使用
+静态变量注意点：
+```

@@ -105,9 +105,12 @@ Java内部类使用
 假设a,b同时维护一个repo， 其中有a.cpp这个文件， 假设b改完a.cpp， 然后a什么都没改的话， a pull origin master，是没有任何问题的。
 但是如果a进行了改动且和b最新的改动(也就是最新push的这一次或多次，在某些行存在差异的话， 因为pull=fetch+部分自动合并， 会有各种合并的提醒， >>>>>这种符号blabla)，
 关键是， 如果a在上次pull origin master之后， b没有进行任何更新， 那么即使a有改动， a pull origin master 也不会有任何冲突， （即使真的有很多冲突）。
+
 这一点很容易解释: git的原则是， 如果a之前已经pull了其他用户的改动， 那么a就对其他所有用户的编辑都很清楚，也就是很清楚自己的行为，那么做任何改动之后，重新pull之后不会做任何conflict提醒。
 相反， 如果此时有其他用户有新的push，a不知道，那么a push的时候，就会发生conflict,而git不会在服务器端解决冲突， 只会要求用户在提交之前就确定自己想要提交的内容， 所以需要先pull下其他用户的改动，
 然后在本地进行改动之后，再进行新的push。
+
+注意： git服务器端似乎不会去check， 你未及时pull到local的其他用户的操作是不是对你本次的push有影响， 一律报错。 也就是说即使b用户添加了一个b.cpp文件，a用户没有及时pull， 那么a在改完a.cpp之后提交， 也依然会报错， 还是要先pull下b.cpp。(但是似乎此时不需要重新commit即可push啦， 而前一种情况， 在conflict自动merge之后还是需要commit一下才可以push， 否则git还默认你没有做改动。)
 
 另外最好用git fetch + git merge, 新建一个分支tmp来fetch最新的服务器端代码, git pull origin master:tmp,
 然后切换到需要比对的分支，比如git checkout gh-pages, 然后进行diff, git diff tmp,

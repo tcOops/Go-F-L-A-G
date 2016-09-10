@@ -8,3 +8,6 @@
 [http://blog.csdn.net/liuqiyao_01/article/details/8477730](http://blog.csdn.net/liuqiyao_01/article/details/8477730)
 
 ###POJ3093(经典背包优化, 逆序
+
+###Kuangbin 图论+网络流基本题
+[http://www.cnblogs.com/kuangbin/p/3228371.html](http://www.cnblogs.com/kuangbin/p/3228371.html)

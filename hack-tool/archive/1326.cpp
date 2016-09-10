@@ -1,4 +1,4 @@
-// Author: RejudgeX
+// Author:tcOops
 // Level -> CF/TC -> Yellow
 // > -> Ag
 // -> F/L/A/G
@@ -7,71 +7,73 @@
 #include <iostream>
 #include <cmath>
 #include <cstring>
-#include <string>
 #include <cstdio>
 #include <set>
 #include <algorithm>
-#include <queue>
-#include <vector>
-#include <map>
-#include <ctime>
-//#include <bits/stdc++.h>
 using namespace std;
-#define rep(i,a,n) for (int i=a;i<n;i++)
-#define per(i,a,n) for (int i=n-1;i>=a;i--)
-#define pb push_back
-#define mp make_pair
-#define all(x) (x).begin(),(x).end()
-#define SZ(x) ((int)(x).size())
-#define fi first
-#define se second
-typedef vector<int> VI;
-typedef long long ll;
-typedef pair<int,int> PII;
-const ll MOD = 1000000007;
-ll powmod(ll a,ll b) {ll res=1;a%=MOD;for(;b;b>>=1){if(b&1)res=res*a%MOD;a=a*a%MOD;}return res;}
-// head
+#define minab(a, b) ((a) < (b) ? (a) : (b))
+const int N = 5000010;
 
-inline void gn(long long &x){
-    int sg=1;
-    char c;while(((c=getchar())<'0'||c>'9')&&c!='-');c=='-'?(sg=-1,x=0):(x=c-'0');
-    while((c=getchar())>='0'&&c<='9')x=x*10+c-'0';x*=sg;
+int phi[N];
+int dp[N][24];
+
+void pre() {
+    memset(phi, 0, sizeof(phi));
+    phi[1] = 1;
+    for(int i = 2; i < N; ++i) {
+        if(phi[i] == 0) {
+            for(int j = i; j < N; j += i) {
+                if(phi[j] == 0) {
+                    phi[j] = j;
+                }
+                phi[j] = phi[j] / i * (i-1);
+            }
+        }
+    }
+    
+    /*
+    for(int i = 1; i < N; ++i) {
+        dp[i][0] = phi[i];
+    }
+    for(int j = 1; j < 24; ++j) {
+        for(int i = 1; i+(1<<j)-1 < N; ++i) {
+            int k = i + (1<<(j-1));
+            dp[i][j] = minab(dp[i][j-1], dp[k][j-1]);
+        }
+    }
+    */
 }
 
-inline void gn(int&x){long long t;gn(t);x=t;}
-inline void gn(unsigned long long&x){long long t;gn(t);x=t;}
-inline void gn(double&x){double t;scanf("%lf",&t);x=t;}
-inline void gn(long double&x){double t;scanf("%lf",&t);x=t;}
+void solve(int left, int right) {
+    int range = right - left + 1;
+    int l = 0, r = range;
+    while(l < r) {
+        int mid = (l + r + 1) >> 1;
+        if((1 << mid) > range) {
+            r = mid - 1;
+        }
+        else {
+            l = mid;
+        }
+    }
+    
+    int ans = minab(dp[left][l], dp[right - (1<<l) + 1][l]);
+    printf("%d\n", ans);
+}
 
 int main() {
-  int T; string word;
-  gn(T);
-  for(int i = 0; i < T; ++i) {
-    cin >> word;
-    int cnt0 = 0, cnt1 = 0;
-    for(int i = 0; word[i]; ++i) {
-      if(word[i] == '0') {
-        ++cnt0;
-      }
+    pre();
+    
+    int l, r;
+    scanf("%d %d", &l, &r);
+    int ans = 1e9, id;
+    for(int i = l; i <= r; ++i) {
+        if(phi[i] < ans) {
+            ans = phi[i];
+            id = i;
+        }
     }
-
-    int ans = cnt0;
-    for(int i = 0; word[i]; ++i) {
-      if(word[i] == '0') {
-        cnt0--;
-      }
-      else {
-        ++cnt1;
-      }
-      if(cnt0 + cnt1 < ans) {
-        ans = cnt0 + cnt1;
-      }
-    }
-
-    if(cnt1 < ans) {
-      ans = cnt1;
-    }
-    cout << ans << endl;
-  }
-  return 0;
+    printf("%d\n", id);
+ //   solve(l, r);
+    return 0;
 }

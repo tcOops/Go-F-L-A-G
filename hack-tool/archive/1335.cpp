@@ -114,12 +114,4 @@ int main() {
         cout << endl;
     }
     return 0;
-} {
-        for(int j = 0, ll = ans[i].size(); j < ll; ++j) {
-            cout << ans[i][j] << " ";
-        }
-        cout << endl;
-    }
-     */
-    return 0;
 }

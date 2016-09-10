@@ -36,8 +36,8 @@ int main() {
     }
     
     memset(dp, 0, sizeof(dp));
-   // dp[1][1] = cab[1];
-    for(int i = 0; i < n; ++i) {
+    dp[1][1<<(m-2)] = cab[1];
+    for(int i = 1; i < n; ++i) {
         for(int s = 0; s < (1 << (m-1)); ++s) {
             int bits = cal(s, m-1);
             if(bits > q) {

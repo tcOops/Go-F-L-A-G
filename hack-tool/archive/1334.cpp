@@ -49,9 +49,9 @@ const int N = 41;
 int n, dp[N];
 string doc[N];
 
-int g[N][N],best,num[N];
+int g[N][N], best, num[N];
 
-bool dfs(int *tmp,int total,int cnt) {
+bool dfs(int *tmp, int total, int cnt) {
     int i,j,k,a[N];
     if(!total){
         if(best<cnt){
@@ -60,12 +60,19 @@ bool dfs(int *tmp,int total,int cnt) {
         }
         return false;
     }
-    for(i=0;i<total;i++) {
-        if(cnt+(total-i)<=best)return false;
-        if(cnt+num[tmp[i]]<=best)return false;
-        for(k=0,j=i+1;j<total;j++)
-            if(g[tmp[i]][tmp[j]])
-                a[k++]=tmp[j];
+    
+    for(i = 0; i < total; ++i) {
+        if(cnt + (total - i) <= best) {
+            return false;
+        }
+        if(cnt + num[tmp[i]] <= best) {
+            return false;
+        }
+        for(k = 0, j = i + 1; j < total; ++j) {
+            if(g[tmp[i]][tmp[j]]) {
+                a[k++] = tmp[j];
+            }
+        }
         if(dfs(a,k,cnt+1))
             return true;
         
@@ -73,15 +80,17 @@ bool dfs(int *tmp,int total,int cnt) {
     return false;
 }
 
-int MaxNumClique(){
-    int i,j,k,tmp[N];
-    best=0;
-    for(i=n-1;i>=0;i--){
-        for(k=0,j=i+1;j<n;j++)
-            if(g[i][j])
-                tmp[k++]=j;
-        dfs(tmp,k,1);
-        num[i]=best;			
+int MaxNumClique() {
+    int i, j, k, tmp[N];
+    best = 0;
+    for(i = n - 1; i >= 0; --i){
+        for(k = 0, j = i+1; j < n; ++j) {
+            if(g[i][j]) {
+                tmp[k++] = j;
+            }
+        }
+        dfs(tmp, k, 1);
+        num[i] = best;			
     }
     return best;
 }
@@ -119,8 +128,7 @@ int main() {
         }
     }
     
-    int ans = 0;
-    ans = MaxNumClique();
+    int ans = MaxNumClique();
     printf("%d\n", ans);
     return 0;
 }

@@ -6,7 +6,9 @@
 // -> F/L/A/G
 // -> Latency 「2017/5/15」
 
-// BZOJ 3591
+// BZOJ 2839
+// 经典容斥原理
+
 #include <iostream>
 #include <cmath>
 #include <cstring>

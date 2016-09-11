@@ -17,4 +17,4 @@
 
 ###Hihocoder offer练习赛3
 
-###BZOJ 2839
+###BZOJ 2839 (容斥原理)

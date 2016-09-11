@@ -18,3 +18,5 @@
 ###Hihocoder offer练习赛3
 
 ###BZOJ 2839 (容斥原理)
+
+DP水水：[http://codeforces.com/contest/712/problem/D](http://codeforces.com/contest/712/problem/D)

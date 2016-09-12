@@ -115,4 +115,14 @@ Java内部类使用
 另外最好用git fetch + git merge, 新建一个分支tmp来fetch最新的服务器端代码, git pull origin master:tmp,
 然后切换到需要比对的分支，比如git checkout gh-pages, 然后进行diff, git diff tmp,
 有差异的话需要进行手动更新， 有需要的话可以再merge一下， 然后再push。
+
+UPD:实在不行可以rebase啊，　再不行还可以git reset --hard啊！！
 ```
+
+```
+Java表达式计算引擎　JexlEngine
+```
+
+```
+Java中final关键字的使用： 无论属性是基本类型还是引用类型，final所起的作用都是变量里面存放的“值”不能变。
+值得注意的是：　引用类型变量里面放的是个地址，所以用final修饰引用类型变量指的是它里面的地址不能变，并不是说这个地址所指向的对象或数组的内容不可以变。

@@ -44,48 +44,50 @@ inline void gn(unsigned long long&x){long long t;gn(t);x=t;}
 inline void gn(double&x){double t;scanf("%lf",&t);x=t;}
 inline void gn(long double&x){double t;scanf("%lf",&t);x=t;}
 
-struct Interval {
-    int start;
-    int end;
-    Interval() : start(0), end(0) {}
-    Interval(int s, int e) : start(s), end(e) {}
-};
+class Solution {
+// Algorithm : Enumerate & Two-points
+// Time Complexity : O(nlgn + n^2) = O(n^2)
+// The use of unique of Vector (important)
 
-set<int > st;
-
-class SummaryRanges {
 public:
-    /** Initialize your data structure here. */
-    SummaryRanges() {
-			st.clear();
-    }
+    vector<vector<int>> fourSum(vector<int>& nums, int target) {
+			vector<vector<int> > ans;
+			vector<int > res;
 
-    void addNum(int val) {
-			st.insert(val);
-    }
-
-    vector<Interval> getIntervals() {
-			vector<Interval> ans;
-			int begin = -1;
-			for(set<int >::iterator it = st.begin(); it != st.end();) {
-				if(begin == -1) {
-					begin = *it;
-					++it;
+			sort(nums.begin(), nums.end());
+			for(int i = 0; i < nums.size(); ++i) {
+				if(i > 0 && nums[i] == nums[i-1]) continue;
+				for(int j = i+1; j < nums.size(); ++j) {
+					if(j > i+1 && nums[j] == nums[j-1]) continue;
+					int tgt = target - nums[i] - nums[j];
+					int l = j + 1, r = nums.size() - 1;
+					while(l < r) {
+						if(nums[l] + nums[r] == tgt) {
+							res.clear();
+							res.push_back(nums[i]);
+							res.push_back(nums[j]);
+							res.push_back(nums[l]);
+							res.push_back(nums[r]);
+							ans.push_back(res);
+							++l, --r;
+						}
+						else if(nums[l] + nums[r] < tgt) {
+							++l;
+						}
+						else {
+							--r;
+						}
+					}
 				}
-				int end = begin;
-				while(it != st.end() && (*it == end || *it == end + 1)) {
-					end = *it;
-					++it;
-				}
-				ans.push_back(Interval(begin, end));
-				if(it == st.end()) break;
-				begin = *it;
+			}
 
+			vector<vector<int > >::iterator it = unique(ans.begin(), ans.end());
+			if(it != ans.end()) {
+				ans.erase(it, ans.end());
 			}
 			return ans;
     }
 };
-
 
 int main() {
   Solution sol = Solution();

@@ -72,17 +72,21 @@ void dfs(int k) {
     }
 }
 
+#define http cout << "mobaiyzw" << endl; goto gaclib; gaclib
+
 int main() {
-#define RejudgeX
+//#define RejudgeX
 #ifdef RejudgeX
     freopen("in.txt", "r", stdin);
     freopen("out.txt", "w", stdout);
 #endif
-
+/*
     while(~scanf("%d%d", &n, &m)) {
       ans = 0;
       dfs(0);
       printf("%d\n", ans - 1);
     }
+*/
+    http://mobaiyuzhiwei
     return 0;
 }

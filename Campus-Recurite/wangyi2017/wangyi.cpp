@@ -48,27 +48,22 @@ inline void gn(unsigned long long&x){long long t;gn(t);x=t;}
 inline void gn(double&x){double t;scanf("%lf",&t);x=t;}
 inline void gn(long double&x){double t;scanf("%lf",&t);x=t;}
 
-int dp[1000][2];
-
-int solve(int n, int m) {
-  if(n == 0) return 0;
-  if(m == 1) return n;
-  if(dp[n][m] != -1) {
-    return dp[n][m];
-  }
-
-  int ans = 1e9;
-  for(int i = 1; i <= n; ++i) {
-    int tmp = max(solve(i-1, m-1), solve(n-i, m)) + 1;
-    if(tmp < ans) {
-      ans = tmp;
-    }
-  }
-  return dp[n][m] = ans;
-}
-
 int main() {
-  memset(dp, -1, sizeof(dp));
-  printf("%d\n", solve(200, 2));
-  return 0;
+  long long n;
+  gn(n);
+  long long ans = 0;
+  long long odd = n / 2, even = n / 2;
+  if(n & 1) {
+    ++odd;
+  }
+  ans = (long long)odd*odd;
+  long long i = 1;
+  long long sum = 0;
+  for(; (1<<i) <= n; ++i) {
+    sum += (1<<i);
+  }
+
+  ans += i - 1;
+  ans += (n*(n+1)/2 - odd*odd - sum) / 2;
+  cout << ans << endl;
 }

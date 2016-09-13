@@ -48,6 +48,75 @@ inline void gn(unsigned long long&x){long long t;gn(t);x=t;}
 inline void gn(double&x){double t;scanf("%lf",&t);x=t;}
 inline void gn(long double&x){double t;scanf("%lf",&t);x=t;}
 
+<<<<<<< HEAD
+const int N = 51;
+const int INF = 0x3f3f3f3f;
+int dp[N][N];
+int a[N], sum[N];
+
 int main() {
-  
+  int n; gn(n);
+  sum[0] = 0;
+  for(int i = 1; i <= n; ++i) {
+    gn(a[i]);
+    sum[i] = sum[i-1] + a[i];
+  }
+
+  memset(dp, INF, sizeof(dp));
+  for(int i = 1; i <= n; ++i) {
+    for(int j = 1; j <= i; ++j) {
+      dp[i][j] = 0;
+    }
+  }
+  if(n >= 2) {
+    for(int i = 1; i < n; ++i) {
+      dp[i][i+1] = (a[i] == a[i+1] ? 0 : 1);
+    }
+  }
+
+  for(int t = 3; t <= n; ++t) {
+    for(int i = 1; i+t-1 <= n; ++i) {
+      int j = i + t - 1;
+      bool flag = false;
+      for(int k = i; k <= j; ++k) {
+        for(int p = k + 1; p <= j; ++p) {
+          if(sum[k] - sum[i-1] == sum[j] - sum[p-1]) {
+            flag = true;
+            if(dp[k+1][p-1] + (k - i) + (j - p) < dp[i][j]) {
+              dp[i][j] = dp[k+1][p-1] + (k - i) + (j - p);
+            }
+          }
+        }
+      }
+      if(!flag) {
+        dp[i][j] = j - i;
+      }
+    }
+  }
+  cout << dp[1][n] << endl;
+=======
+int dp[1000][2];
+
+int solve(int n, int m) {
+  if(n == 0) return 0;
+  if(m == 1) return n;
+  if(dp[n][m] != -1) {
+    return dp[n][m];
+  }
+
+  int ans = 1e9;
+  for(int i = 1; i <= n; ++i) {
+    int tmp = max(solve(i-1, m-1), solve(n-i, m)) + 1;
+    if(tmp < ans) {
+      ans = tmp;
+    }
+  }
+  return dp[n][m] = ans;
+}
+
+int main() {
+  memset(dp, -1, sizeof(dp));
+  printf("%d\n", solve(200, 2));
+>>>>>>> 0da26a6ccabb0207ba964b8bd89b7bc9efead390
+  return 0;
 }

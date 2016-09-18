@@ -46,6 +46,38 @@ inline void gn(unsigned long long&x){long long t;gn(t);x=t;}
 inline void gn(double&x){double t;scanf("%lf",&t);x=t;}
 inline void gn(long double&x){double t;scanf("%lf",&t);x=t;}
 
+long long gcd(long long a, long long b) {
+  return b == 0 ? a : gcd(b, a%b);
+}
+
 int main() {
-  int 
+  int divide = 1;
+  for(; ; ++divide) {
+    if(fabs(1.0/(divide*divide)) < 0.00001) {
+      break;
+    }
+  }
+//  cout << divide << endl;
+
+  int n;
+  while(~scanf("%d", &n)) {
+    if(n >= divide) {
+      n = divide;
+    }
+
+    long long x = 1, y = 1;
+    for(int i = 2; i <= min(19, n); ++i) {
+      long long tmpx = x * i * i, tmpy = y * i * i + x;
+      long long tmpGcd = gcd(tmpx, tmpy);
+      tmpx /= tmpGcd, tmpy /= tmpGcd;
+      x = tmpx, y = tmpy;
+    //  cout << x << " " << y << endl;
+    }
+    double ans = 1.0*y/x;
+    for(int i = min(19, n) + 1; i <= n; ++i) {
+      ans += 1.0/(i*i);
+    }
+    printf("%.5lf\n", ans);
+  }
+  return 0;
 }

@@ -36,38 +36,59 @@ const ll MOD = 1000000007;
 ll powmod(ll a,ll b) {ll res=1;a%=MOD;for(;b;b>>=1){if(b&1)res=res*a%MOD;a=a*a%MOD;}return res;}
 // head
 
-inline void gn(long long &x){
-    int sg=1;
-    char c;while(((c=getchar())<'0'||c>'9')&&c!='-');c=='-'?(sg=-1,x=0):(x=c-'0');
-    while((c=getchar())>='0'&&c<='9')x=x*10+c-'0';x*=sg;
-}
+const int N = 1010;
+int a[N];
+set<int > st;
 
-inline void gn(int&x){long long t;gn(t);x=t;}
-inline void gn(unsigned long long&x){long long t;gn(t);x=t;}
-inline void gn(double&x){double t;scanf("%lf",&t);x=t;}
-inline void gn(long double&x){double t;scanf("%lf",&t);x=t;}
 
 int main() {
-  int a, b, c, d;
-  gn(a); gn(b); gn(c); gn(d);
-  bool suc = true;
-  int x = ((a + c) & 1) ? (suc = false, -1) : (a + c)>>1;
-  int y = x - a;
-  if(y < 0) {
-    suc = false;
-  }
-  int z = y - b;
-  if(z < 0) {
-    suc = false;
-  }
-  if(y + z != d) {
-    suc = false;
-  }
-  if(!suc) {
-    cout << "No" << endl;
-  }
-  else {
-    cout << x << " " << y << " " << z << endl;
+  int T, n, l;
+  scanf("%d", &T);
+  while(T--) {
+    scanf("%d %d", &n, &l);
+    for(int i = 1; i <= l; ++i) {
+      scanf("%d", &a[i]);
+    }
+
+    bool ans = false;
+    for(int i = 1; i <= min(l, n); ++i) {
+//        cout << i << t << endl;
+        st.clear();
+        bool suc = true;
+        for(int j = 1; j < i; ++j) {
+          if(st.count(a[j])) {
+            suc = false;
+            break;
+          }
+          st.insert(a[j]);
+        }
+        if(!suc) {
+          continue;
+        }
+
+        st.clear();
+        for(int j = i; j <= l; ++j) {
+          if(st.count(a[j])) {
+            suc = false;
+            break;
+          }
+          st.insert(a[j]);
+          if(st.size() == n) {
+            st.clear();
+          }
+        }
+
+        if(suc) {
+          ans = true;
+          break;
+        }
+    }
+    if(ans) {
+      cout << "CAN'T DECIDE" << endl;
+    }
+    else {
+      cout << "B" << endl;
+    }
   }
   return 0;
 }

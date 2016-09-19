@@ -126,3 +126,17 @@ Java表达式计算引擎　JexlEngine
 ```
 Java中final关键字的使用： 无论属性是基本类型还是引用类型，final所起的作用都是变量里面存放的“值”不能变。
 值得注意的是：　引用类型变量里面放的是个地址，所以用final修饰引用类型变量指的是它里面的地址不能变，并不是说这个地址所指向的对象或数组的内容不可以变。
+```
+
+```
+Cache写策略：
+write through: 更新cache的同时同时更新memory,保持高一致性
+write back:　只有cache中数据被替换时，才写回memory.
+Write Miss:
+  要么直接写回memory, 要么先将要写的块从memory调入cache,再更新cache.
+```
+
+```
+对hive的认识
+Hive (CLI) Beeline:
+```

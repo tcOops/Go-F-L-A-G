@@ -138,5 +138,39 @@ Write Miss:
 
 ```
 对hive的认识
+  Hive的特性应该是专门用来做数据仓库的，　特点当然就是支持类SQL啦，　在下层实际上还是转化为Map/Reduce任务来做。
+  一般任务都是批处理来搞，实时性没那么好(Latency比较高)，不适合做实时在线的交互(实时交互还是用oracle或者hbase或者stream比较好)
 Hive (CLI) Beeline:
+```
+
+```
+Hive安装：
+Hive是一个Hadoop的客户端，所以是依赖于hadoop存在的(不跑hadoop跑不了hive).Hive主要用来提供数据仓库的功能，　类似于数据库，依赖于hdfs，创建一些表，这些表实际上存在hdfs上。　但是表的结构很灵活，没有专门的存储格式，格式可以由用户来提供。
+Hive的Metadata是需要保存的(因为需要upd之类)，所以一般存在RDBMS上。　默认hive1.0是存在derby(三种模式:in-memory | network | thrift),　但是我们可以通过修改conf存在mysql上，下一个mysql的jdbc驱动就好啦。hive提供各种jdbc的接口。
+所以，当我们新建了一张表之后，可以去mysql里面check,因为里面会有相关的meta-data,但是hive创建的表本身还是存在hdfs上哒。
+```
+
+```
+关于hive的三种连接方式:
+CLI
+Web UI
+jdbc
+对于CLI，有hive自己的一套标准（类似mysql提供的CLI, 不同应用提供的CLI不一样，　一般这个也不统一，取决于CLI的实现　hive与mysql有区别
+对于jdbc，那就完全一样啦，Class.forname...DriverManager,所以只要是提供jdbc接口的应用，那么一定要在驱动程屏蔽这种差异
+比如TranSwarp的Inceptor上层在开发的jdbc与odbc驱动，就是为了给用户提供在java环境与windows环境下进行简单调用Inceptor的方便。
+```
+
+```
+JAR/WAR/EAR的联系与区别
+```
+
+```
+关于beeline:　beeline 是去调用hive的，　我们不采用直接cli模式，　也不采用jdbc的方法，　而采用beeline.
+```
+
+```
+Hive与Hbase的联系与区别：
+  Apache Hive是一个构建在Hadoop基础设施之上的数据仓库。通过Hive可以使用HQL语言查询存放在HDFS上的数据。HQL是一种类SQL语言，这种语言最终被转化为Map/Reduce. 虽然Hive提供了SQL查询功能，但是Hive不能够进行交互查询--因为它只能够在Haoop上批量的执行Hadoop。
+
+  Apache HBase是一种Key/Value系统，它运行在HDFS之上。和Hive不一样，Hbase的能够在它的数据库上实时运行，而不是运行MapReduce任务。Hive被分区为表格，表格又被进一步分割为列簇。列簇必须使用schema定义，列簇将某一类型列集合起来（列不要求schema定义）。例如，“message”列簇可能包含：“to”, ”from” “date”, “subject”, 和”body”. 每一个 key/value对在Hbase中被定义为一个cell，每一个key由row-key，列簇、列和时间戳。在Hbase中，行是key/value映射的集合，这个映射通过row-key来唯一标识。Hbase利用Hadoop的基础设施，可以利用通用的设备进行水平的扩展。
 ```

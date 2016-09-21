@@ -60,3 +60,14 @@ Design Pattern: 将接口集中在Context中，统一调用，也提供单个功
 ScheduleContext接口是一个包含多个agent的接口，而MasterScheduleContext实现了ScheduleContext接口，
 这是一个大的运行容器类，包含schedule, task, execute, persistence等function.
 ```
+
+```
+JDBC/数据库驱动
+JDBC是一些标准访问接口，每个数据库的厂商都要开发适合该接口的驱动程序，以jar包形式提供，
+用户想使用该数据库的时候，引入该jar包就能以jdbc的形式统一调用
+```
+关于Java如何连接数据库: [http://www.cnblogs.com/hongten/archive/2011/03/29/1998311.html](http://www.cnblogs.com/hongten/archive/2011/03/29/1998311.html)
+```
+关于Maven的文档
+```
+[http://www.yiibai.com/maven/](http://www.yiibai.com/maven/)

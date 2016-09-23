@@ -6,8 +6,6 @@
 // -> F/L/A/G
 // -> Latency 「2017/5/15」
 
-// 8道水题
-
 #include <iostream>
 #include <cmath>
 #include <cstring>
@@ -19,6 +17,7 @@
 #include <vector>
 #include <map>
 #include <ctime>
+#include <bitset>
 //#include <bits/stdc++.h>
 using namespace std;
 #define rep(i,a,n) for (int i=a;i<n;i++)
@@ -36,59 +35,95 @@ const ll MOD = 1000000007;
 ll powmod(ll a,ll b) {ll res=1;a%=MOD;for(;b;b>>=1){if(b&1)res=res*a%MOD;a=a*a%MOD;}return res;}
 // head
 
-const int N = 1010;
+inline void gn(long long &x){
+    int sg=1;
+    char c;while(((c=getchar())<'0'||c>'9')&&c!='-');c=='-'?(sg=-1,x=0):(x=c-'0');
+    while((c=getchar())>='0'&&c<='9')x=x*10+c-'0';x*=sg;
+}
+
+inline void gn(int&x){long long t;gn(t);x=t;}
+inline void gn(unsigned long long&x){long long t;gn(t);x=t;}
+inline void gn(double&x){double t;scanf("%lf",&t);x=t;}
+inline void gn(long double&x){double t;scanf("%lf",&t);x=t;}
+
+// head
+const int N = 100010;
 int a[N];
-set<int > st;
+struct trie {
+  int val;
+  trie *next[2];
+  trie() {
+    memset(next, NULL, sizeof(next));
+    val = 0;
+  }
+};
+int dig[41], b[41];
 
+void insert(trie *root, int k) {
+  memset(dig, 0, sizeof(dig));
+  int cnt = 0;
+  while(k) {
+    dig[cnt++] = k%2;
+    k /= 2;
+  }
 
-int main() {
-  int T, n, l;
-  scanf("%d", &T);
-  while(T--) {
-    scanf("%d %d", &n, &l);
-    for(int i = 1; i <= l; ++i) {
-      scanf("%d", &a[i]);
+  trie *p = root;
+  for(int i = 40; i >= 0; --i) {
+    if(p->next[dig[i]] == NULL) {
+      trie *q = new trie();
+      p->next[dig[i]] = q;
     }
+    p = p->next[dig[i]];
+    p->val += 1;
+  }
+}
 
-    bool ans = false;
-    for(int i = 1; i <= min(l, n); ++i) {
-//        cout << i << t << endl;
-        st.clear();
-        bool suc = true;
-        for(int j = 1; j < i; ++j) {
-          if(st.count(a[j])) {
-            suc = false;
-            break;
-          }
-          st.insert(a[j]);
-        }
-        if(!suc) {
-          continue;
-        }
+int query(trie *root, int k, int m) {
+  memset(dig, 0, sizeof(dig));
+  memset(b, 0, sizeof(b));
+  int cnt = 0;
+  while(k) {
+    dig[cnt++] = k&1;
+    k /= 2;
+  }
 
-        st.clear();
-        for(int j = i; j <= l; ++j) {
-          if(st.count(a[j])) {
-            suc = false;
-            break;
-          }
-          st.insert(a[j]);
-          if(st.size() == n) {
-            st.clear();
-          }
-        }
+  cnt = 0;
+  while(m) {
+    b[cnt++] = m&1;
+    m >>= 1;
+  }
 
-        if(suc) {
-          ans = true;
-          break;
-        }
-    }
-    if(ans) {
-      cout << "CAN'T DECIDE" << endl;
+  trie *p = root;
+  long long ans = 0;
+  for(int i = 40; i >= 0; --i) {
+    if(dig[i] == 0) {
+      if(p->next[b[i]^1]) {
+        ans += p->next[b[i]^1]->val;
+      }
+      p = p->next[b[i]];
     }
     else {
-      cout << "B" << endl;
+      p = p->next[b[i]^1];
     }
+    if(p == NULL) break;
   }
+  return ans;
+}
+
+int main() {
+  int n, m;
+  gn(n); gn(m);
+  trie *root = new trie();
+  for(int i = 1; i <= n; ++i) {
+    gn(a[i]);
+    insert(root, a[i]);
+  }
+
+  long long ans = 0;
+  for(int i = 1; i <= n; ++i) {
+    long long res = query(root, m, a[i]);
+    ans += res;
+  }
+  cout << ans/2 << endl;
   return 0;
 }

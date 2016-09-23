@@ -119,6 +119,6 @@ int main() {
   return 0;
 =======
 int main() {
-  int 
+  int
 >>>>>>> 14b5f2635ab86a03a2ea4b904f198a605128c086
 }

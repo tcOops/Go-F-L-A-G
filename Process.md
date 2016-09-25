@@ -174,3 +174,9 @@ Hive与Hbase的联系与区别：
 
   Apache HBase是一种Key/Value系统，它运行在HDFS之上。和Hive不一样，Hbase的能够在它的数据库上实时运行，而不是运行MapReduce任务。Hive被分区为表格，表格又被进一步分割为列簇。列簇必须使用schema定义，列簇将某一类型列集合起来（列不要求schema定义）。例如，“message”列簇可能包含：“to”, ”from” “date”, “subject”, 和”body”. 每一个 key/value对在Hbase中被定义为一个cell，每一个key由row-key，列簇、列和时间戳。在Hbase中，行是key/value映射的集合，这个映射通过row-key来唯一标识。Hbase利用Hadoop的基础设施，可以利用通用的设备进行水平的扩展。
 ```
+
+```
+Inceptor算是数据库的功能层，　将下层的分布式存储系统（分布式数据库）的功能封装成接口（JDBC, SQL客户端，CLI等形式提供给用户)，　之后可能会对SQL进行编译优化等等，并与数据库存储引擎进行对接。
+HyperBase算是数据库的存储引擎，需要解决分布式数据库的种种设计问题（分布式存储系统的各种问题：高可用，一致性，可扩展性，性能等), 参考OceanBase：提供了RootServer解决元数据存储问题，ChunkServer存储基线数据，UpdateServer在内存种存储增量数据，MergeServer解决用户的请求，将数据进行合并等操作。
+当然:Inceptor似乎不仅仅支持分布式数据库的操作，　还支持其他的分布式存储系统的操作，　比如键值系统|分布式文件系统等。
+```

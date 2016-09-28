@@ -46,84 +46,63 @@ inline void gn(unsigned long long&x){long long t;gn(t);x=t;}
 inline void gn(double&x){double t;scanf("%lf",&t);x=t;}
 inline void gn(long double&x){double t;scanf("%lf",&t);x=t;}
 
-// head
-const int N = 100010;
-int a[N];
-struct trie {
-  int val;
-  trie *next[2];
-  trie() {
-    memset(next, NULL, sizeof(next));
-    val = 0;
-  }
-};
-int dig[41], b[41];
+const int N = 1e6 + 10;
+long long m, n;
+int ans[100];
 
-void insert(trie *root, int k) {
-  memset(dig, 0, sizeof(dig));
-  int cnt = 0;
-  while(k) {
-    dig[cnt++] = k%2;
-    k /= 2;
-  }
-
-  trie *p = root;
-  for(int i = 40; i >= 0; --i) {
-    if(p->next[dig[i]] == NULL) {
-      trie *q = new trie();
-      p->next[dig[i]] = q;
+void solve(long long n, bool canZero, long long m, int cnt, int len) {
+  cout << n << endl;
+  if(n < 10) {
+    ans[cnt] = canZero ? m - 1 : m;
+    int i = 0;
+    for(;;++i) {
+      if(ans[i] != 0) break;
     }
-    p = p->next[dig[i]];
-    p->val += 1;
-  }
-}
-
-int query(trie *root, int k, int m) {
-  memset(dig, 0, sizeof(dig));
-  memset(b, 0, sizeof(b));
-  int cnt = 0;
-  while(k) {
-    dig[cnt++] = k&1;
-    k /= 2;
-  }
-
-  cnt = 0;
-  while(m) {
-    b[cnt++] = m&1;
-    m >>= 1;
-  }
-
-  trie *p = root;
-  long long ans = 0;
-  for(int i = 40; i >= 0; --i) {
-    if(dig[i] == 0) {
-      if(p->next[b[i]^1]) {
-        ans += p->next[b[i]^1]->val;
-      }
-      p = p->next[b[i]];
+    for(; i < len; ++i) {
+      printf("%d", ans[i]);
     }
-    else {
-      p = p->next[b[i]^1];
-    }
-    if(p == NULL) break;
+    return ;
   }
-  return ans;
+
+  long long dig = n, bb = 1;
+  while(dig >= 10) {
+    dig /= 10;
+    bb = bb * 10;
+  }
+  int start = canZero ? 0 : 1;
+  if(dig == start) {
+    solve(bb, false, m, cnt + 1, len - 1);
+    return ;
+  }
+  long long base = 1, sum = 0;
+  for(int i = 0; i < len; ++i) {
+    sum += base;
+    base *= 10;
+  }
+  int cn = m / sum;
+  int cur = start + cn - 1;
+  if(m % sum != 0) {
+    ++cur;
+  }
+  ans[cnt] = cur;
+  long long nxt;
+  if(cur == dig) {
+    nxt = bb;
+  }
+  else {
+    nxt = n - bb * dig;
+  }
+  solve(nxt, true, m - sum * (cur - start), cnt + 1, len - 1);
 }
 
 int main() {
-  int n, m;
   gn(n); gn(m);
-  trie *root = new trie();
-  for(int i = 1; i <= n; ++i) {
-    gn(a[i]);
-    insert(root, a[i]);
+  int len = 0;
+  long long res = n;
+  while(res) {
+    res /= 10;
+    ++len;
   }
-
-  long long ans = 0;
-  for(int i = 1; i <= n; ++i) {
-    long long res = query(root, m, a[i]);
-    ans += res;
-  }
-  cout << ans/2 << endl;
+  solve(n, true, m, 0, len);
   return 0;
 }

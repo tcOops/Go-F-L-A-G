@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 Case #1: 0.0000000
 Case #2: 0.0000000
 Case #3: 1.0000000
@@ -98,3 +99,25 @@ Case #97: 0.6845000
 Case #98: 1.0818000
 Case #99: 3.4395000
 Case #100: 0.0000000
+=======
+Case #1: BAD
+Case #2: GOOD
+Case #3: BAD
+Case #4: BAD
+Case #5: BAD
+Case #6: BAD
+Case #7: GOOD
+Case #8: GOOD
+Case #9: GOOD
+Case #10: GOOD
+Case #11: GOOD
+Case #12: BAD
+Case #13: GOOD
+Case #14: BAD
+Case #15: BAD
+Case #16: BAD
+Case #17: BAD
+Case #18: GOOD
+Case #19: GOOD
+Case #20: GOOD
+>>>>>>> 4650458cbf707824d779fb94736e75b61c64cb26

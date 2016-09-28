@@ -46,84 +46,69 @@ inline void gn(unsigned long long&x){long long t;gn(t);x=t;}
 inline void gn(double&x){double t;scanf("%lf",&t);x=t;}
 inline void gn(long double&x){double t;scanf("%lf",&t);x=t;}
 
-// head
-const int N = 100010;
-int a[N];
-struct trie {
-  int val;
-  trie *next[2];
-  trie() {
-    memset(next, NULL, sizeof(next));
-    val = 0;
-  }
+long long mat[4][4] = {
+  {1, 0, 1, 0},
+  {1, 0, 1, 0},
+  {0, 0, 0, 1},
+  {0, 1, 0, 1}
 };
-int dig[41], b[41];
 
-void insert(trie *root, int k) {
-  memset(dig, 0, sizeof(dig));
-  int cnt = 0;
-  while(k) {
-    dig[cnt++] = k%2;
-    k /= 2;
+void cal(long long a[][4], long long b[][4], int mod) {
+  long long c[4][4];
+  memset(c, 0, sizeof(c));
+  for(int i = 0; i < 4; ++i) {
+    for(int j = 0; j < 4; ++j) {
+      for(int k = 0; k < 4; ++k) {
+        c[i][j] = (c[i][j] + a[i][k] * b[k][j] % mod) % mod;
+      }
+    }
   }
 
-  trie *p = root;
-  for(int i = 40; i >= 0; --i) {
-    if(p->next[dig[i]] == NULL) {
-      trie *q = new trie();
-      p->next[dig[i]] = q;
+  for(int i = 0; i < 4; ++i) {
+    for(int j = 0; j < 4; ++j) {
+      a[i][j] = c[i][j];
     }
-    p = p->next[dig[i]];
-    p->val += 1;
   }
 }
 
-int query(trie *root, int k, int m) {
-  memset(dig, 0, sizeof(dig));
-  memset(b, 0, sizeof(b));
-  int cnt = 0;
+void solve(long long a[][4], long long k, int mod) {
+  long long c[4][4];
+  memset(c, 0, sizeof(c));
+  for(int i = 0; i < 4; ++i) {
+    c[i][i] = 1;
+  }
+
   while(k) {
-    dig[cnt++] = k&1;
-    k /= 2;
+    if(k & 1) {
+      cal(c, a, mod);
+    }
+    k >>= 1;
+    cal(a, a, mod);
   }
 
-  cnt = 0;
-  while(m) {
-    b[cnt++] = m&1;
-    m >>= 1;
-  }
-
-  trie *p = root;
   long long ans = 0;
-  for(int i = 40; i >= 0; --i) {
-    if(dig[i] == 0) {
-      if(p->next[b[i]^1]) {
-        ans += p->next[b[i]^1]->val;
-      }
-      p = p->next[b[i]];
+  for(int i = 0; i < 4; ++i) {
+    for(int j = 0; j < 4; ++j) {
+      ans = (ans + c[i][j]) % mod;
     }
-    else {
-      p = p->next[b[i]^1];
-    }
-    if(p == NULL) break;
   }
-  return ans;
+  cout << ans << endl;
 }
 
 int main() {
-  int n, m;
-  gn(n); gn(m);
-  trie *root = new trie();
-  for(int i = 1; i <= n; ++i) {
-    gn(a[i]);
-    insert(root, a[i]);
+  long long n;
+  gn(n);
+  if(n == 0) {
+    printf("0\n");
   }
-
-  long long ans = 0;
-  for(int i = 1; i <= n; ++i) {
-    long long res = query(root, m, a[i]);
-    ans += res;
+  else if(n == 1) {
+    printf("2\n");
   }
-  cout << ans/2 << endl;
+  else if(n == 2) {
+    printf("4\n");
+  }
+  else {
+    solve(mat, n - 2, MOD);
+  }
   return 0;
 }

@@ -1,8 +1,4 @@
 //AC
-<<<<<<< HEAD
-=======
-
->>>>>>> 14b5f2635ab86a03a2ea4b904f198a605128c086
 // Author: RejudgeX
 // Level -> CF/TC -> Yellow
 // > -> Ag
@@ -10,10 +6,7 @@
 // -> Latency 「2017/5/15」
 
 
-<<<<<<< HEAD
 //1002
-=======
->>>>>>> 14b5f2635ab86a03a2ea4b904f198a605128c086
 #include <iostream>
 #include <cmath>
 #include <cstring>
@@ -24,10 +17,7 @@
 #include <queue>
 #include <vector>
 #include <map>
-<<<<<<< HEAD
 #include <stack>
-=======
->>>>>>> 14b5f2635ab86a03a2ea4b904f198a605128c086
 #include <ctime>
 //#include <bits/stdc++.h>
 using namespace std;
@@ -42,14 +32,9 @@ using namespace std;
 typedef vector<int> VI;
 typedef long long ll;
 typedef pair<int,int> PII;
-<<<<<<< HEAD
 const ll mod = 1000000007;
 
 ll powmod(ll a,ll b) {ll res=1;a%=mod;for(;b;b>>=1){if(b&1)res=res*a%mod;a=a*a%mod;}return res;}
-=======
-const ll MOD = 1000000007;
-ll powmod(ll a,ll b) {ll res=1;a%=MOD;for(;b;b>>=1){if(b&1)res=res*a%MOD;a=a*a%MOD;}return res;}
->>>>>>> 14b5f2635ab86a03a2ea4b904f198a605128c086
 // head
 
 inline void gn(long long &x){
@@ -63,7 +48,6 @@ inline void gn(unsigned long long&x){long long t;gn(t);x=t;}
 inline void gn(double&x){double t;scanf("%lf",&t);x=t;}
 inline void gn(long double&x){double t;scanf("%lf",&t);x=t;}
 
-<<<<<<< HEAD
 const int N = 100010;
 int a[N], r[N];
 
@@ -117,8 +101,4 @@ int main() {
 
   }
   return 0;
-=======
-int main() {
-  int
->>>>>>> 14b5f2635ab86a03a2ea4b904f198a605128c086
 }

@@ -44,48 +44,6 @@ inline void gn(unsigned long long&x){long long t;gn(t);x=t;}
 inline void gn(double&x){double t;scanf("%lf",&t);x=t;}
 inline void gn(long double&x){double t;scanf("%lf",&t);x=t;}
 
-<<<<<<< HEAD
-const int N = 3010;
-struct node {
-  int x, y;
-  bool operator<(const node &rhs) const {
-    return x < rhs.x || (x == rhs.x && y < rhs.y);
-  }
-}p[N];
-
-int m, n, k;
-
-long long solve(int x, int y) {
-  long long ret = 0;
-  for(int i = 1; i <= min(x, y); ++i) {
-    ret += (x - i + 1) * (y - i + 1);
-  }
-  return ret;
-}
-
-int main() {
-  int T; gn(T);
-  while(T--) {
-    gn(m); gn(n); gn(k);
-    for(int i = 0; i < k; ++i) {
-      gn(p[i].x); gn(p[i].y);
-    }
-    sort(p, p+k);
-
-    int hx = 0, ly = 0;
-    long long ans = 0;
-    for(int i = 0; i < k;) {
-      int j = i;
-      while(j < k && p[j].x == p[i].x) {
-        ans += solve(p[j].x - hx, p[j].y - ly);
-        ly = p[i].y + 1;
-        ++j;
-      }
-      if(ly <= n - 1) {
-        ans += solve(p[i].x - hx, n - ly);
-      }
-      hx = p[i].x + 1, ly = 0, i = j;
-=======
 const int N = 100010;
 map<string, int > mp;
 int in[N];
@@ -174,9 +132,7 @@ int main() {
     }
     else {
       printf("Case #%d: BAD\n", cases++);
->>>>>>> 4650458cbf707824d779fb94736e75b61c64cb26
     }
-    cout << ans << endl;
   }
   return 0;
 }

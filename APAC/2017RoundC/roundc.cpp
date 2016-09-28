@@ -45,49 +45,48 @@ inline void gn(unsigned long long&x){long long t;gn(t);x=t;}
 inline void gn(double&x){double t;scanf("%lf",&t);x=t;}
 inline void gn(long double&x){double t;scanf("%lf",&t);x=t;}
 
-string a;
-bool solve(int s, int e) {
-  if(s == e) {
-    return true;
+const int N = 3010;
+struct node {
+  int x, y;
+  bool operator<(const node &rhs) const {
+    return x < rhs.x || (x == rhs.x && y < rhs.y);
   }
+}p[N];
 
-  for(int i = s; i < e; ++i) {
-    bool suc1 = true;
-    for(int j = s; j <= i && suc1; ++j) {
-      for(int k = i + 1; k <= e; ++k) {
-        if(a[j] > a[k]) {
-          suc1 = false;
-          break;
-        }
-      }
-    }
+int m, n, k;
 
-    bool suc2 = true;
-    for(int j = s; j <= i && suc2; ++j) {
-      for(int k = i + 1; k <= e; ++k) {
-        if(a[j] < a[k]) {
-          suc2 = false;
-          break;
-        }
-      }
-    }
-
-    if(!suc1 && !suc2) continue;
-    if(solve(s, i) && solve(i+1, e)) {
-      return true;
-    }
+long long solve(int x, int y) {
+  long long ret = 0;
+  for(int i = 1; i <= min(x, y); ++i) {
+    ret += (x - i + 1) * (y - i + 1);
   }
-  return false;
+  return ret;
 }
 
 int main() {
-  while(cin >> a) {
-    if(solve(0, 9)) {
-      cout << "YES" << endl;
+  int T; gn(T);
+  while(T--) {
+    gn(m); gn(n); gn(k);
+    for(int i = 0; i < k; ++i) {
+      gn(p[i].x); gn(p[i].y);
     }
-    else {
-      cout << "NO" << endl;
+    sort(p, p+k);
+
+    int hx = 0, ly = 0;
+    long long ans = 0;
+    for(int i = 0; i < k;) {
+      int j = i;
+      while(j < k && p[j].x == p[i].x) {
+        ans += solve(p[j].x - hx, p[j].y - ly);
+        ly = p[i].y + 1;
+        ++j;
+      }
+      if(ly <= n - 1) {
+        ans += solve(p[i].x - hx, n - ly);
+      }
+      hx = p[i].x + 1, ly = 0, i = j;
     }
+    cout << ans << endl;
   }
   return 0;
 }

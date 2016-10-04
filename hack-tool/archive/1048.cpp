@@ -46,70 +46,73 @@ inline void gn(unsigned long long&x){long long t;gn(t);x=t;}
 inline void gn(double&x){double t;scanf("%lf",&t);x=t;}
 inline void gn(long double&x){double t;scanf("%lf",&t);x=t;}
 
-const int N = 10010;
-const int INF = 1e9;
-int small[N<<2];
+const int N = 1010;
+long long tran[35][35];
+int n, m;
 
-void pushUp(int idx) {
-  small[idx] = min(small[idx<<1], small[idx<<1|1]);
-}
-
-void build(int idx, int l, int r) {
-  if(l == r) {
-    gn(small[idx]);
+void dfs(int cur, long long sta1, long long sta2) {
+  if(cur == m) {
+    tran[sta1][sta2] = 1;
     return ;
   }
-  int mid = (l + r) >> 1;
-  build(idx<<1, l, mid);
-  build(idx<<1|1, mid+1, r);
-  pushUp(idx);
+  dfs(cur + 1, sta1<<1, sta2<<1|1);
+  dfs(cur + 1, sta1<<1|1, sta2<<1);
+  if(cur + 2 <= m) {
+    dfs(cur + 2, (sta1<<2)+3, (sta2<<2)+3);
+  }
 }
 
-void modify(int idx, int l, int r, int pos, int val) {
-  if(l == r) {
-    small[idx] = val;
-    return ;
+void cal(long long a[][35], long long b[][35], int n) {
+  long long c[35][35];
+  memset(c, 0, sizeof(c));
+  for(int i = 0; i < n; ++i) {
+    for(int j = 0; j < n; ++j) {
+      for(int k = 0; k < n; ++k) {
+        c[j][k] = a[j][i]*b[i][k]%MOD + c[j][k];
+        c[j][k] %= MOD;
+       }
+    }
   }
-  int mid = (l + r) >> 1;
-  if(pos <= mid) {
-    modify(idx<<1, l, mid, pos, val);
+
+  for(int i = 0; i < n; ++i) {
+    for(int j = 0; j < n; ++j) {
+      a[i][j] = c[i][j];
+    }
   }
-  else {
-    modify(idx<<1|1, mid+1, r, pos, val);
-  }
-  pushUp(idx);
 }
 
-int query(int idx, int l, int r, int L, int R) {
-  if(l >= L && r <= R) {
-    return small[idx];
+void fastMul(long long a[][35], int k) {
+  long long c[35][35];
+  memset(c, 0, sizeof(c));
+  for(int i = 0; i < 35; ++i) {
+    c[i][i] = 1;
   }
-  int mid = (l + r) >> 1;
-  int ret = INF;
-  if(mid >= L) {
-    ret = min(ret, query(idx<<1, l, mid, L, R));
+
+  while(k) {
+    if(k & 1) {
+      cal(c, a, (1<<m));
+    }
+    k >>= 1;
+    cal(a, a, (1<<m));
   }
-  if(mid < R) {
-    ret = min(ret, query(idx<<1|1, mid+1, r, L, R));
+
+  for(int i = 0; i < (1<<m); ++i) {
+    for(int j = 0; j < (1<<m); ++j) {
+      a[i][j] = c[i][j];
+    }
   }
-  return ret;
+}
+
+void solve() {
+  memset(tran, 0, sizeof(tran));
+  dfs(0, 0, 0);
+  fastMul(tran, n);
+  long long ans = tran[(1<<m)-1][(1<<m)-1];
+  cout << ans << endl;
 }
 
 int main() {
-  int n, m;
-  gn(n);
-  build(1, 1, n);
-  gn(m);
-  for(int i = 1; i <= m; ++i) {
-    int x, y, z;
-    gn(x); gn(y); gn(z);
-    if(x == 0) {
-      int ans = query(1, 1, n, y, z);
-      cout << ans << endl;
-    }
-    else {
-      modify(1, 1, n, y, z);
-    }
-  }
+  gn(n); gn(m);
+  solve();
   return 0;
 }

@@ -1,6 +1,7 @@
 //提交地址: http://hihocoder.com/problemset/problem/1237
 //简单数学题
 
+/*
 #include<cstdio>
 #include<cmath>
 #include<iostream>
@@ -56,5 +57,74 @@ int main(){
         gao(matrix, n-1);
     }
     }
+    return 0;
+}
+*/
+ 
+#include<cstdio>
+#include<cmath>
+#include<iostream>
+#include<cstring>
+#include<algorithm>
+#include<map>
+#include<vector>
+#include<string>
+using namespace std;
+typedef long long LL;
+const int N = 140;
+const int MOD = 12357;
+int n, k;
+
+int sta[N][N];
+
+void dfs(int x, int y, int cnt){
+    if(cnt == k){
+        sta[y][x] = 1;
+        return ;
+    }
+    dfs(x<<1, y<<1|1, cnt+1);
+    dfs(x<<1|1, y<<1, cnt+1);
+    if(cnt+2 <= k){
+        dfs((x<<2)+3, (y<<2)+3, cnt+2);
+    }
+}
+
+void matrixMul(int a[][N], int b[][N], int k){
+    int c[N][N];
+    for(int i = 0; i < k; ++i){
+        for(int j = 0; j < k; ++j){
+            c[i][j] = 0;
+            for(int t = 0; t < k; ++t){
+                c[i][j] += a[i][t]*b[t][j];
+                c[i][j] = c[i][j] % MOD;
+            }
+        }
+    }
+    
+    for(int i = 0; i < k; ++i){
+        for(int j = 0; j < k; ++j){
+            a[i][j] = c[i][j];
+        }
+    }
+}
+
+int main(){
+    scanf("%d%d", &k, &n);
+    int a[N][N];
+    memset(a, 0, sizeof(a));
+    for(int i = 0; i < (1<<k); ++i){
+        a[i][i] = 1;
+    }
+    memset(sta, 0, sizeof(sta));
+    dfs(0, 0, 0);
+    
+    while(n){
+        if(n&1){
+            matrixMul(a, sta, (1<<k));
+        }
+        n >>= 1;
+        matrixMul(sta, sta, (1<<k));
+    }
+    printf("%d\n", a[(1<<k)-1][(1<<k)-1]);
     return 0;
 }

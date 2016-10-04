@@ -120,8 +120,7 @@ bool fits() {
 bool dfs(int k) {
   if(k == 4) {
     if(joint() && fits()) {
-      printf("YES
-");suc = true;
+      printf("YES\n");suc = true;
       return true;
     }
   }
@@ -154,10 +153,8 @@ int main() {
     suc = false;
     dfs(0);
     if(!suc) {
-      printf("NO
-");
+      printf("NO\n");
     }
   }
   return 0;
 }
-

@@ -6,7 +6,6 @@
 // -> F/L/A/G
 // -> Latency 「2017/5/15」
 
-//
 #include <iostream>
 #include <cmath>
 #include <cstring>
@@ -18,6 +17,7 @@
 #include <vector>
 #include <map>
 #include <ctime>
+#include <bitset>
 //#include <bits/stdc++.h>
 using namespace std;
 #define rep(i,a,n) for (int i=a;i<n;i++)
@@ -46,70 +46,47 @@ inline void gn(unsigned long long&x){long long t;gn(t);x=t;}
 inline void gn(double&x){double t;scanf("%lf",&t);x=t;}
 inline void gn(long double&x){double t;scanf("%lf",&t);x=t;}
 
-const int N = 10010;
-const int INF = 1e9;
-int small[N<<2];
-
-void pushUp(int idx) {
-  small[idx] = min(small[idx<<1], small[idx<<1|1]);
-}
-
-void build(int idx, int l, int r) {
-  if(l == r) {
-    gn(small[idx]);
-    return ;
-  }
-  int mid = (l + r) >> 1;
-  build(idx<<1, l, mid);
-  build(idx<<1|1, mid+1, r);
-  pushUp(idx);
-}
-
-void modify(int idx, int l, int r, int pos, int val) {
-  if(l == r) {
-    small[idx] = val;
-    return ;
-  }
-  int mid = (l + r) >> 1;
-  if(pos <= mid) {
-    modify(idx<<1, l, mid, pos, val);
-  }
-  else {
-    modify(idx<<1|1, mid+1, r, pos, val);
-  }
-  pushUp(idx);
-}
-
-int query(int idx, int l, int r, int L, int R) {
-  if(l >= L && r <= R) {
-    return small[idx];
-  }
-  int mid = (l + r) >> 1;
-  int ret = INF;
-  if(mid >= L) {
-    ret = min(ret, query(idx<<1, l, mid, L, R));
-  }
-  if(mid < R) {
-    ret = min(ret, query(idx<<1|1, mid+1, r, L, R));
-  }
-  return ret;
-}
+const int N = 1010;
+int cnt[N][4];
 
 int main() {
-  int n, m;
-  gn(n);
-  build(1, 1, n);
-  gn(m);
-  for(int i = 1; i <= m; ++i) {
-    int x, y, z;
-    gn(x); gn(y); gn(z);
-    if(x == 0) {
-      int ans = query(1, 1, n, y, z);
-      cout << ans << endl;
+  int T; gn(T);
+  int k;
+  string gene;
+  while(T--) {
+    cin >> gene >> k;
+    memset(cnt, 0, sizeof(cnt));
+    for(int i = 0; i < min(k, (int)gene.size() - k); ++i) {
+      for(int j = i; j < gene.size(); j += (int)gene.size() - k) {
+        switch(gene[j]) {
+          case 'A':
+            cnt[i][0]++;
+            break;
+          case 'T':
+            cnt[i][1]++;
+            break;
+          case 'C':
+            cnt[i][2]++;
+            break;
+          case 'G':
+            cnt[i][3]++;
+            break;
+        }
+      }
     }
-    else {
-      modify(1, 1, n, y, z);
+
+    int ans = 0;
+    for(int i = 0; i < min((int)gene.size() - k, k); ++i) {
+      int sum = cnt[i][0] + cnt[i][1] + cnt[i][2] + cnt[i][3];
+      int maxChange = 1e9;
+      for(int j = 0; j < 4; ++j) {
+        if(sum - cnt[i][j] < maxChange) {
+          maxChange = sum - cnt[i][j];
+        }
+      }
+      ans += maxChange;
     }
+    cout << ans << endl;
   }
   return 0;
 }

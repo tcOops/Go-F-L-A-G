@@ -1,5 +1,4 @@
 //AC
-
 // Author: RejudgeX
 // Level -> CF/TC -> Yellow
 // > -> Ag
@@ -17,13 +16,11 @@
 #include <vector>
 #include <map>
 #include <ctime>
-#include <bitset>
 //#include <bits/stdc++.h>
 using namespace std;
 #define rep(i,a,n) for (int i=a;i<n;i++)
 #define per(i,a,n) for (int i=n-1;i>=a;i--)
 #define pb push_back
-#define mp make_pair
 #define all(x) (x).begin(),(x).end()
 #define SZ(x) ((int)(x).size())
 #define fi first
@@ -32,7 +29,8 @@ typedef vector<int> VI;
 typedef long long ll;
 typedef pair<int,int> PII;
 const ll MOD = 1000000007;
-ll powmod(ll a,ll b) {ll res=1;a%=MOD;for(;b;b>>=1){if(b&1)res=res*a%MOD;a=a*a%MOD;}return res;}
+
+ll powMOD(ll a,ll b) {ll res=1;a%=MOD;for(;b;b>>=1){if(b&1)res=res*a%MOD;a=a*a%MOD;}return res;}
 // head
 
 inline void gn(long long &x){
@@ -46,53 +44,57 @@ inline void gn(unsigned long long&x){long long t;gn(t);x=t;}
 inline void gn(double&x){double t;scanf("%lf",&t);x=t;}
 inline void gn(long double&x){double t;scanf("%lf",&t);x=t;}
 
+const int N = 1050;
+int dp[N][N];
+int tmp[N];
+vector<int > g[N];
+int val[N];
+int n, m;
 
-#define LL long long
-LL n, m, k, ans, e, pre[1000010], inv[1000010];
-
-LL pow_mod(LL a, LL n) {
-    a %= MOD;
-    LL ret = 1;
-    while (n) {
-        if (n&1) ret = (ret*a)%MOD;
-        a = (a*a)%MOD;
-        n >>= 1;
+void solve(int u, int fa) {
+  dp[u][val[u]] = 1;
+  for(auto v : g[u]) {
+    if(v == fa) continue;
+    solve(v, u);
+    for(int i = 0; i < m; ++i) {
+      tmp[i] = dp[u][i];
     }
-    return ret;
+    for(int i = 0; i < m; ++i) {
+      for(int j = 0; j < m; ++j) {
+        dp[u][i] = (dp[v][j]*tmp[i^j]%MOD + dp[u][i])%MOD;
+      }
+    }
+  }
 }
-
-void init() {
-    pre[0] = 1;
-    for (int i = 1; i <= 1000000; i++) pre[i] = pre[i-1]*i%MOD;
-    inv[0] = 1;
-    for (int i = 1; i <= 1000000; i++) inv[i] = pow_mod(pre[i], MOD-2)%MOD;
-}
-
-LL C(LL x, LL y) {
-    if (x <= 1 || y == 0) return 1;
-    LL t = pre[x];
-    t = t*inv[y]%MOD*inv[x-y]%MOD;
-    return t;
-}
-
-
+ ？
 int main() {
-    init();
-    int tt;
-    scanf("%d", &tt);
-    for (int cases = 1; cases <= tt; cases++) {
-        scanf("%lld %lld", &n, &m);
-        k = 1;
-        if (m == 1) {
-            printf("%lld\n", n);
-            continue;
-        }
-        e = n-m*(k+1);
-        if (e < 0) {
-            printf("0\n");
-            continue;
-        }
-        ans = C(m+e-1, e)*n%MOD*pre[m-1]%MOD;
-        printf("%lld\n", ans);
+  int T; gn(T);
+  while(T--) {
+    gn(n); gn(m);
+    for(int i = 1; i <= n; ++i) {
+      gn(val[i]);
+      g[i].clear();
     }
+    for(int i = 1; i < m; ++i) {
+      int x, y;
+      gn(x); gn(y);
+      g[x].push_back(y);
+      g[y].push_back(x);
+    }
+    memset(dp, 0, sizeof(dp));
+    solve(1, -1);
+
+    for(int i = 0; i < m; ++i) {
+      int ans = 0;
+      for(int j = 1; j <= n; ++j) {
+        ans = (ans + dp[j][i])%MOD;
+      }
+      if(i) {
+        printf(" ");
+      }
+      printf("%d", ans);
+    }
+    cout << endl;
+  }
+  return 0;
 }

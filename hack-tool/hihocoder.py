@@ -80,7 +80,8 @@ class get_AC_train():
         pageLinks = pat.findall(r.content)
       #  urlVisit = []
 
-        for pageLink in pageLinks:
+        for pageLink in pageLinks[::-1]:
+            print pageLink
             if pageLink in urlVisit:
                 continue
             urlVisit.append(pageLink)
@@ -128,6 +129,7 @@ class robot(threading.Thread):
     def run(self):
         while True:
             task = taskPool.get(block = True)
+            print task
             no = noPool.get(block = True)
             s = requests.session()
             r = s.get(task, cookies = cookie)

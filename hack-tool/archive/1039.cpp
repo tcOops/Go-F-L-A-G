@@ -6,7 +6,7 @@
 // -> F/L/A/G
 // -> Latency 「2017/5/15」
 
-//
+
 #include <iostream>
 #include <cmath>
 #include <cstring>
@@ -46,70 +46,50 @@ inline void gn(unsigned long long&x){long long t;gn(t);x=t;}
 inline void gn(double&x){double t;scanf("%lf",&t);x=t;}
 inline void gn(long double&x){double t;scanf("%lf",&t);x=t;}
 
-const int N = 10010;
-const int INF = 1e9;
-int small[N<<2];
+string change[3] = {"A", "B", "C"};
 
-void pushUp(int idx) {
-  small[idx] = min(small[idx<<1], small[idx<<1|1]);
-}
-
-void build(int idx, int l, int r) {
-  if(l == r) {
-    gn(small[idx]);
-    return ;
+int solve(string word) {
+  int ans = 0;
+  for(int i = 0; i < word.size(); ++i) {
+    for(int t = 0; t < 3; ++t) {
+      string word1 = word.substr(0, i+1) + change[t] + word.substr(i+1);
+      int cnt = 0;
+      while(true) {
+        string word2 = "";
+        bool suc = false;
+        for(int j = 0; j < word1.size();) {
+            int k = j;
+            while(k < word1.size() && word1[k] == word1[j]) {
+              ++k;
+            }
+            if(k - j > 1) {
+              suc = true;
+              cnt += k - j;
+            }
+            else {
+              word2 += word1[j];
+            }
+            j = k;
+        }
+        if(!suc) {
+          break;
+        }
+        word1 = word2;
+      }
+      if(cnt > ans) {
+        ans = cnt;
+      }
+    }
   }
-  int mid = (l + r) >> 1;
-  build(idx<<1, l, mid);
-  build(idx<<1|1, mid+1, r);
-  pushUp(idx);
-}
-
-void modify(int idx, int l, int r, int pos, int val) {
-  if(l == r) {
-    small[idx] = val;
-    return ;
-  }
-  int mid = (l + r) >> 1;
-  if(pos <= mid) {
-    modify(idx<<1, l, mid, pos, val);
-  }
-  else {
-    modify(idx<<1|1, mid+1, r, pos, val);
-  }
-  pushUp(idx);
-}
-
-int query(int idx, int l, int r, int L, int R) {
-  if(l >= L && r <= R) {
-    return small[idx];
-  }
-  int mid = (l + r) >> 1;
-  int ret = INF;
-  if(mid >= L) {
-    ret = min(ret, query(idx<<1, l, mid, L, R));
-  }
-  if(mid < R) {
-    ret = min(ret, query(idx<<1|1, mid+1, r, L, R));
-  }
-  return ret;
+  return ans;
 }
 
 int main() {
-  int n, m;
-  gn(n);
-  build(1, 1, n);
-  gn(m);
-  for(int i = 1; i <= m; ++i) {
-    int x, y, z;
-    gn(x); gn(y); gn(z);
-    if(x == 0) {
-      int ans = query(1, 1, n, y, z);
-      cout << ans << endl;
-    }
-    else {
-      modify(1, 1, n, y, z);
-    }
+  int n;gn(n);
+  for(int i = 0; i < n; ++i) {
+    string word;
+    cin >> word;
+    cout << solve(word) << endl;
   }
   return 0;
 }

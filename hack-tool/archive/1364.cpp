@@ -56,7 +56,7 @@ void _01Bag(int x, int y) {
 }
 
 void fullBag(int x, int y) {
-  for(int i = m; i <= x; ++i) {
+  for(int i = x; i <= m; ++i) {
     dp[i] = max(dp[i], dp[i-x] + y);
   }
 }

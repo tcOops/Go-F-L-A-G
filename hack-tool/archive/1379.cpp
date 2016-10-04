@@ -4,6 +4,9 @@
 // -> F/L/A/G
 // -> Latency 「2017/5/15」
 
+//Tree Dp
+//考虑当前节点与父节点之间是否有操作的关系
+//dp[i][2]->表示未进行操作, dp[i][0]->进行操作1, dp[i][1]->进行操作了2
 #include <iostream>
 #include <cmath>
 #include <cstring>
@@ -28,8 +31,9 @@ using namespace std;
 typedef vector<int> VI;
 typedef long long ll;
 typedef pair<int,int> PII;
-const ll MOD = 1000000007;
-ll powmod(ll a,ll b) {ll res=1;a%=MOD;for(;b;b>>=1){if(b&1)res=res*a%MOD;a=a*a%MOD;}return res;}
+const ll mod = 1000000007;
+
+ll powmod(ll a,ll b) {ll res=1;a%=mod;for(;b;b>>=1){if(b&1)res=res*a%mod;a=a*a%mod;}return res;}
 // head
 
 inline void gn(long long &x){
@@ -42,36 +46,41 @@ inline void gn(int&x){long long t;gn(t);x=t;}
 inline void gn(unsigned long long&x){long long t;gn(t);x=t;}
 inline void gn(double&x){double t;scanf("%lf",&t);x=t;}
 inline void gn(long double&x){double t;scanf("%lf",&t);x=t;}
+const int N = 310;
+int dist[N][N];
+bool conn[N][N];
+
+void solve(int n) {
+  memset(conn, true, sizeof(conn));
+  for(int k = 0; k < n; ++k) {
+    for(int i = 0; i < n; ++i) {
+      for(int j = 0; j < n; ++j) {
+        if(i == k || j == k) continue;
+        if(dist[i][k] + dist[k][j] == dist[i][j]) {
+          conn[i][j] = false;
+        }
+      }
+    }
+  }
+
+  int ans = 0;
+  for(int i = 0; i < n; ++i) {
+    for(int j = i + 1; j < n; ++j) {
+      if(conn[i][j]) {
+        ++ans;
+      }
+    }
+  }
+  cout << ans << endl;
+}
 
 int main() {
-  int T; string word;
-  gn(T);
-  for(int i = 0; i < T; ++i) {
-    cin >> word;
-    int cnt0 = 0, cnt1 = 0;
-    for(int i = 0; word[i]; ++i) {
-      if(word[i] == '0') {
-        ++cnt0;
-      }
+  int n; gn(n);
+  for(int i = 0; i < n; ++i) {
+    for(int j = 0; j < n; ++j) {
+      gn(dist[i][j]);
     }
-
-    int ans = cnt0;
-    for(int i = 0; word[i]; ++i) {
-      if(word[i] == '0') {
-        cnt0--;
-      }
-      else {
-        ++cnt1;
-      }
-      if(cnt0 + cnt1 < ans) {
-        ans = cnt0 + cnt1;
-      }
-    }
-
-    if(cnt1 < ans) {
-      ans = cnt1;
-    }
-    cout << ans << endl;
   }
+  solve(n);
   return 0;
 }

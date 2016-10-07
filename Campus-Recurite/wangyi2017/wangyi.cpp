@@ -51,8 +51,8 @@ long long m, n;
 int ans[100];
 
 void solve(long long n, bool canZero, long long m, int cnt, int len) {
-  cout << n << endl;
-  if(n < 10) {
+  cout << n << " " << m << endl;
+  if(n <= 10) {
     ans[cnt] = canZero ? m - 1 : m;
     int i = 0;
     for(;;++i) {
@@ -71,7 +71,8 @@ void solve(long long n, bool canZero, long long m, int cnt, int len) {
   }
   int start = canZero ? 0 : 1;
   if(dig == start) {
-    solve(bb, false, m, cnt + 1, len - 1);
+    cout << "cccc" << endl;
+    solve(bb, false, m - (n - bb + 1), cnt + 1, len - 1);
     return ;
   }
   long long base = 1, sum = 0;
@@ -103,6 +104,6 @@ int main() {
     res /= 10;
     ++len;
   }
-  solve(n, true, m, 0, len);
+  solve(n, false, m, 0, len);
   return 0;
 }

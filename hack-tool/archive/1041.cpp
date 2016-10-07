@@ -75,7 +75,7 @@ void solve(int u, int fa) {
   while(idx < m) {
     int res = idx;
     int need = a[idx];
-    for(auto v : g[u]) {
+    for(auto v : g[u]) {              
       if(v == fa) continue;
       if(f[v][need] && !used[u][v]) {
         used[u][v] = true;

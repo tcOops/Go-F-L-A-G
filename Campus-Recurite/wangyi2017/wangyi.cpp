@@ -46,13 +46,11 @@ inline void gn(unsigned long long&x){long long t;gn(t);x=t;}
 inline void gn(double&x){double t;scanf("%lf",&t);x=t;}
 inline void gn(long double&x){double t;scanf("%lf",&t);x=t;}
 
-const int N = 1e6 + 10;
-long long m, n;
-int ans[100];
 
+<<<<<<< HEAD
 void solve(long long n, bool canZero, long long m, int cnt, int len) {
-  cout << n << endl;
-  if(n < 10) {
+  cout << n << " " << m << endl;
+  if(n <= 10) {
     ans[cnt] = canZero ? m - 1 : m;
     int i = 0;
     for(;;++i) {
@@ -60,10 +58,23 @@ void solve(long long n, bool canZero, long long m, int cnt, int len) {
     }
     for(; i < len; ++i) {
       printf("%d", ans[i]);
-    }
-    return ;
-  }
+=======
+#define LL long long
+LL n, m, k, ans, e, pre[1000010], inv[1000010];
 
+LL pow_mod(LL a, LL n) {
+    a %= MOD;
+    LL ret = 1;
+    while (n) {
+        if (n&1) ret = (ret*a)%MOD;
+        a = (a*a)%MOD;
+        n >>= 1;
+>>>>>>> c0d77caab8db656996ddcb0f9ffbd08f5e0b629f
+    }
+    return ret;
+}
+
+<<<<<<< HEAD
   long long dig = n, bb = 1;
   while(dig >= 10) {
     dig /= 10;
@@ -71,7 +82,8 @@ void solve(long long n, bool canZero, long long m, int cnt, int len) {
   }
   int start = canZero ? 0 : 1;
   if(dig == start) {
-    solve(bb, false, m, cnt + 1, len - 1);
+    cout << "cccc" << endl;
+    solve(bb, false, m - (n - bb + 1), cnt + 1, len - 1);
     return ;
   }
   long long base = 1, sum = 0;
@@ -93,9 +105,25 @@ void solve(long long n, bool canZero, long long m, int cnt, int len) {
     nxt = n - bb * dig;
   }
   solve(nxt, true, m - sum * (cur - start), cnt + 1, len - 1);
+=======
+void init() {
+    pre[0] = 1;
+    for (int i = 1; i <= 1000000; i++) pre[i] = pre[i-1]*i%MOD;
+    inv[0] = 1;
+    for (int i = 1; i <= 1000000; i++) inv[i] = pow_mod(pre[i], MOD-2)%MOD;
+>>>>>>> c0d77caab8db656996ddcb0f9ffbd08f5e0b629f
 }
 
+LL C(LL x, LL y) {
+    if (x <= 1 || y == 0) return 1;
+    LL t = pre[x];
+    t = t*inv[y]%MOD*inv[x-y]%MOD;
+    return t;
+}
+
+
 int main() {
+<<<<<<< HEAD
   gn(n); gn(m);
   int len = 0;
   long long res = n;
@@ -103,6 +131,26 @@ int main() {
     res /= 10;
     ++len;
   }
-  solve(n, true, m, 0, len);
+  solve(n, false, m, 0, len);
   return 0;
+=======
+    init();
+    int tt;
+    scanf("%d", &tt);
+    for (int cases = 1; cases <= tt; cases++) {
+        scanf("%lld %lld", &n, &m);
+        k = 1;
+        if (m == 1) {
+            printf("%lld\n", n);
+            continue;
+        }
+        e = n-m*(k+1);
+        if (e < 0) {
+            printf("0\n");
+            continue;
+        }
+        ans = C(m+e-1, e)*n%MOD*pre[m-1]%MOD;
+        printf("%lld\n", ans);
+    }
+>>>>>>> c0d77caab8db656996ddcb0f9ffbd08f5e0b629f
 }

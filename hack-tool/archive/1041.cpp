@@ -6,7 +6,7 @@
 // -> F/L/A/G
 // -> Latency 「2017/5/15」
 
-//
+
 #include <iostream>
 #include <cmath>
 #include <cstring>
@@ -18,6 +18,7 @@
 #include <vector>
 #include <map>
 #include <ctime>
+#include <bitset>
 //#include <bits/stdc++.h>
 using namespace std;
 #define rep(i,a,n) for (int i=a;i<n;i++)
@@ -46,69 +47,77 @@ inline void gn(unsigned long long&x){long long t;gn(t);x=t;}
 inline void gn(double&x){double t;scanf("%lf",&t);x=t;}
 inline void gn(long double&x){double t;scanf("%lf",&t);x=t;}
 
-const int N = 10010;
-const int INF = 1e9;
-int small[N<<2];
+const int N = 110;
+vector<int> g[N];
+bitset<N > f[N];
+bool used[N][N];
+int a[N], n, m, idx;
+bool suc;
 
-void pushUp(int idx) {
-  small[idx] = min(small[idx<<1], small[idx<<1|1]);
+void pre(int u, int fa) {
+  f[u][u] = 1;
+  for(auto v : g[u]) {
+    if(v == fa) continue;
+    pre(v, u);
+    f[u] |= f[v];
+  }
 }
 
-void build(int idx, int l, int r) {
-  if(l == r) {
-    gn(small[idx]);
+void solve(int u, int fa) {
+  if(idx < m && a[idx] == u) {
+    ++idx;
+  }
+  if(idx == m) {
+    suc = true;
     return ;
   }
-  int mid = (l + r) >> 1;
-  build(idx<<1, l, mid);
-  build(idx<<1|1, mid+1, r);
-  pushUp(idx);
-}
 
-void modify(int idx, int l, int r, int pos, int val) {
-  if(l == r) {
-    small[idx] = val;
-    return ;
+  while(idx < m) {
+    int res = idx;
+    int need = a[idx];
+    for(auto v : g[u]) {
+      if(v == fa) continue;
+      if(f[v][need] && !used[u][v]) {
+        used[u][v] = true;
+        solve(v, u);
+        break;
+      }
+    }
+    if(res == idx) {
+      break;
+    }
   }
-  int mid = (l + r) >> 1;
-  if(pos <= mid) {
-    modify(idx<<1, l, mid, pos, val);
-  }
-  else {
-    modify(idx<<1|1, mid+1, r, pos, val);
-  }
-  pushUp(idx);
-}
-
-int query(int idx, int l, int r, int L, int R) {
-  if(l >= L && r <= R) {
-    return small[idx];
-  }
-  int mid = (l + r) >> 1;
-  int ret = INF;
-  if(mid >= L) {
-    ret = min(ret, query(idx<<1, l, mid, L, R));
-  }
-  if(mid < R) {
-    ret = min(ret, query(idx<<1|1, mid+1, r, L, R));
-  }
-  return ret;
 }
 
 int main() {
-  int n, m;
-  gn(n);
-  build(1, 1, n);
-  gn(m);
-  for(int i = 1; i <= m; ++i) {
-    int x, y, z;
-    gn(x); gn(y); gn(z);
-    if(x == 0) {
-      int ans = query(1, 1, n, y, z);
-      cout << ans << endl;
+  int T; gn(T);
+  while(T--) {
+    gn(n);
+    memset(used, true, sizeof(used));
+    suc = false;
+    for (int i = 1 ; i <= n ; i ++) {
+          g[i].clear();
+          f[i].reset();
+    }
+    for(int i = 1; i < n; ++i) {
+      int x, y;
+      gn(x); gn(y);
+      used[x][y] = used[y][x] = false;
+      g[x].push_back(y), g[y].push_back(x);
+    }
+    gn(m);
+    for(int i = 0; i < m; ++i) {
+      gn(a[i]);
+    }
+    pre(1, 0);
+
+    idx = 0;
+    solve(1, 0);
+    if(suc) {
+      cout << "YES" << endl;
     }
     else {
-      modify(1, 1, n, y, z);
+      cout << "NO" << endl;
     }
   }
   return 0;

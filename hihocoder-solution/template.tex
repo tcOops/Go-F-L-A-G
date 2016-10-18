@@ -1,0 +1,132 @@
+\documentclass{article}
+\usepackage[margin=1in]{geometry}
+\usepackage[Glenn]{fncychap}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{verbatim}
+\usepackage{ctex}
+\usepackage{url}
+
+\title{Hihocoder题目泛做解题报告}
+\author{RejudgeX @ SJTU}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+  language=c++,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true
+  tabsize=3
+}
+
+\begin{document}
+\begin{titlepage}
+\maketitle
+\thispagestyle{empty}
+\pagebreak
+\pagestyle{plain}
+\tableofcontents
+\end{titlepage}
+\section{滚粗日记}
+
+\subsection{1001 : A+B}
+Default , Hello World :)
+\lstinputlisting{Archive/1000.cpp}
+
+\subsection{1014 : Trie树}
+\begin{itemize}
+\item 经典字典树(Trie)
+\item Trie是一种基于字符串前缀保存的数据结构，将每个字符串以一棵树的形式保存，而相同的前缀会在同一颗树的路径上.
+\item 关于Trie常见的操作有：Build, Update, Query. Update | Query的时候由于仅仅按照字符串的长度进行逐位操作，所以复杂度为$O(d)$， build的复杂度为$O(n*d)$.
+\item Trie的扩展有基于Trie的贪心Xor(经典问题如：查找N个数最大的两个异或值， 查找区间最大的异或和等).
+\end{itemize}
+\lstinputlisting{Archive/1014.cpp}
+
+
+\subsection{1015 : KMP算法}
+\begin{itemize}
+\item 经典KMP
+\item KMP太经典了, 关于匹配串与模式串的匹配问题， 利用的是最长前缀与后缀相等来减少不必要的匹配，将匹配的复杂度从$O(n*m)$降到$O(n+m)$.
+\item KMP的next数组可以做很多扩展，最常见的是求循环节。 注意理解next数组的本质，本质上next是多次迭代的，而每次迭代始终保持前缀与后缀相等，这个性质同样重要。
+\end{itemize}
+\lstinputlisting{Archive/1015.cpp}
+
+\subsection{1032 : 最长回文子串}
+\begin{itemize}
+\item 经典Manacher求最长回文串
+\item 字符串最长回文串最简单的就是$O(n^2)$的暴力匹配(枚举中心点), 当然也可以求正向串与逆向串的最长公共子序列,也是$O(n^2)$. 也可以通过枚举i点的前缀与后缀，基于后缀数组与高度数组，求后缀与前缀的最长公共前缀(LCP)来解决，但是复杂度与效率仍然不及Manacher.
+\item Manacher的算法细节不表，说一下大概思路：在遍历字符串的过程中使用记录两个变量值$mx,idx$分别表示迭代到当前位置，最远的回文串能达到的位置以及其对应回文中心的下标。考虑对称性，迭代到i的时候，考虑i关于idx的对称点j，这样通过判断可以将j的回文长度加入到i的回文串中，这部分计算之前已经产生，所以节省了大量重复计算。最终比较一下所有位置的回文串长度即可。
+\item 算法的复杂度为$O(n)$。有很多细节，比如预处理,位置比较等等，可以参考：\_{https://www.felix021.com/blog/read.php?2040}
+\end{itemize}
+\lstinputlisting{Archive/1032.cpp}
+
+\subsection{1033 : 交错和}
+\begin{itemize}
+\item 数位DP
+\item 数位DP是一类按位进行DP统计的问题。按位统计之后，发现有很多重复子问题，于是就可以愉快的DP了.
+\item 数位DP的写法比较固定，一般都是用记忆化搜索的写法(参考我的代码. 注意需要考虑前导0，以及每次枚举的数字的范围(能不能到9).
+\item 对于本题dp[len][sum]记录的是长度为len的数字序列交错和能达到sum的情况有多少种. 复杂度$O(d*k)$
+\end{itemize}
+\lstinputlisting{Archive/1033.cpp}
+
+\subsection{1039 : 字符消除}
+\begin{itemize}
+\item 枚举、模拟
+\item 考虑到字符串s的长度不超过100，完全可以暴力枚举解决。
+\item 枚举可以替换的位置，将该位置分别填充为'A','B','C'进行消除，消除的过程简单模拟即可.复杂度$O(n^2)$
+\end{itemize}
+\lstinputlisting{Archive/1039.cpp}
+
+\subsection{1040 : 矩形判断}
+\begin{itemize}
+\item 模拟题
+\item 考虑围成矩形的条件：(1)四条边首尾相连，能形成一个闭合的环。 (2)这个环中的(1,3)(2,4)边互相平行.
+\item dfs4条边所有的全排列，check是否满足上面两个条件. 时间复杂度$O(1)$
+\end{itemize}
+\lstinputlisting{Archive/1040.cpp}
+
+\subsection{1041 : 国庆出游}
+\begin{itemize}
+\item DFS标记、BitSet
+\item 题目的操作对象是一颗树, 对于树上的部分节点有先后遍历顺序要求，现在要访问所有节点一次，且树上的每条边都只访问两次（来回各一次
+\item 从部分节点的遍历的顺序要求入手，只要能满足这部分节点的遍历顺序就一定找到解. 在树上遍历当然是dfs比较方便,dfs到当前点需要考虑当前需要的次序是否在这个点的子树下面，如果在就dfs下去，且标记过程中所有的边，如果全都找不到就说明无解。
+\item 所以可以先dfs预处理一遍，找出节点u的子树包含的节点集合这样就能在O(1)时间进行判断. 考虑到n不大，直接用bitset搞定.
+\end{itemize}
+\lstinputlisting{Archive/1041.cpp}
+
+\subsection{1042 : 跑马圈地}
+\begin{itemize}
+\item 大模拟
+\item 首先这题的正解我并不知道是什么， 我AC的算法基于：最后圈出的一定是一个矩形。
+\item 基于这一点，我分类大讨论了矩形与水塘的位置关系所有情况。 对于每种情况，枚举圈出的矩形的长宽，然后判断需要的周长是否不超过L，如果是就统计面积，进行比较.
+\item 总之就是个大模拟辣 T\_T, 复杂度$O(n\*m\*(n+m))$?
+\end{itemize}
+\lstinputlisting{Archive/1042.cpp}
+
+\subsection{1044 : 状态压缩·一}
+\begin{itemize}
+\item 状态压缩DP
+\end{itemize}
+\lstinputlisting{Archive/1044.cpp}
+
+\subsection{1039 : 字符消除}
+\begin{itemize}
+\item 枚举、模拟
+\item 考虑到字符串s的长度不超过100，完全可以暴力枚举解决。
+\item 枚举可以替换的位置，将该位置分别填充为'A','B','C'进行消除，消除的过程简单模拟即可.复杂度$O(n^2)$
+\end{itemize}
+\lstinputlisting{Archive/1039.cpp}
+\end{document}

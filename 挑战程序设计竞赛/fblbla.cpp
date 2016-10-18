@@ -6,7 +6,8 @@
 // -> F/L/A/G
 // -> Latency 「2017/5/15」
 
-//2008 Round 1A C
+//POJ 1741
+//树分治-点分治 （经典分治
 #include <iostream>
 #include <cmath>
 #include <cstring>
@@ -46,84 +47,36 @@ inline void gn(int&x){long long t;gn(t);x=t;}
 inline void gn(unsigned long long&x){long long t;gn(t);x=t;}
 inline void gn(double&x){double t;scanf("%lf",&t);x=t;}
 inline void gn(long double&x){double t;scanf("%lf",&t);x=t;}
+typedef pair<int, int>pi;
+struct cmp
 
-const int N = 110;
+{
 
-int link[N*N];
-bool vis[N*N];
-vector<int > g[N*N];
-int n, m, cnt;
-char s[N][N];
-int dx[4] = {0, 0, -1, -1};
-int dy[4] = {-1, 1, -1, 1};
+       bool operator()(const pi &t1,const pi &t2)
 
-bool find(int u) {
-    for(int v : g[u]) {
-        if(!vis[v]) {
-            vis[v] = true;
-            if(link[v] == -1 || find(link[v])) {
-                link[v] = u;
-                return true;
-            }
-        }
-    }
+       {
 
-    return false;
-}
+            return t1.first < t2.first;//相当于less,大顶堆
 
+       }
 
-void solve(int nn) {
-    int ans = 0;
-    memset(link, -1, sizeof(link));
+};
+priority_queue<pi, vector<pi>, cmp> tst;
 
-    for(int i = 0; i < nn; ++i) {
-        int dx = i / m, dy = i % m;
-        if((dy & 1) && (s[dx][dy] == '.')) {
-          memset(vis, false, sizeof(vis));
-          if(find(i)) {
-              ++ans;
-          }
-        }
-    }
+struct node {
+  int a, b;
+  bool operator<(const node &rhs) const {
+    return a < rhs.a;
+  }
+};
+priority_queue<node > bb;
 
-    printf("%d\n", cnt - ans);
-}
 
 int main() {
-  freopen("in.txt", "r", stdin);
-  freopen("out.txt", "w", stdout);
-  int T, cases = 1; gn(T);
-  while(T--) {
-    gn(n); gn(m);
-    for(int i = 0; i < n; ++i) {
-      scanf("%s", s[i]);
-    }
-    for(int i = 0; i < n*m; ++i) {
-      g[i].clear();
-    }
-
-    cnt = 0;
-    for(int i = 0; i < n; ++i) {
-      for(int j = 0; j < m; ++j) {
-        if(s[i][j] == '.') {
-          ++cnt;
-          for(int k = 0; k < 4; ++k) {
-            int nx = i + dx[k];
-            int ny = j + dy[k];
-            if(nx < 0 || nx >= n || ny < 0 || ny >= m) {
-              continue;
-            }
-            if(s[nx][ny] == 'x') {
-              continue;
-            }
-            g[i*m+j].push_back(nx*m+ny);
-            g[nx*m+ny].push_back(i*m+j);
-          }
-        }
-      }
-    }
-    printf("Case #%d: ", cases++);
-    solve(n*m);
-  }
+  pi b = make_pair(1, 2);
+  tst.push(b);
+  b = make_pair(7, 1);
+  tst.push(b);
+  printf("%d", tst.top().first);
   return 0;
 }

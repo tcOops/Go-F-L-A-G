@@ -51,7 +51,7 @@ int main() {
   int n, m;
   while(T--) {
     gn(n); gn(m);
-    
+    printf("Case #%d: %.6lf\n", cases++, 1.0*(n-m)/(n+m));
   }
   return 0;
 }

@@ -20,10 +20,12 @@ workflow最原始的任务是task，当新建了一个task之后需要首先持�
 	st = delayQueue.poll(DEFAULT_WAIT_INTERVAL_SECONDS, TimeUnit.SECONDS);
 意思就是不停的从delayQueue里面取scheduleTask,没有的话可能需要被阻塞等待。
 
-这里有一个要注意的地方：新建的话都是以workflow为单位，workflow也写成一个特殊的task进行persist和写入delayQueue,
-而workflow里面的task只是进行persist，只有当workflow这个task被从delayQueue里面取出来的时候，才会从持久层里面把这个workflow里面(相关)的task取出来，加入到delayQueue里面,而delayQueue是可以按照scheduleTime来自动进行排序的，所以很快就能执行该task。
+这里有一个要注意的地方：新建的话都是以workflow为单位，workflow也写成一个特殊的task进行persist和写入delayQueue,(用户新建只是持久化，只有在发布workflow的时候才会写入delayQueue）
+而workflow里面的task只是进行persist，只有当workflow这个task被从delayQueue里面取出来的时候，才会从持久层里面把这个workflow里面(相关)的task取出来(也就是说deploy workflow的时候只是将workflow这个task加入到delay_queue，而不会将workflow里面的inner task加入进去，　直到执行scheduleManager里面的sbumit的时候，才考虑将一个workflow相关的task加入到delay_queue)，加入到delayQueue里面,而delayQueue是可以按照scheduleTime来自动进行排序的，所以很快就能执行该task。
 
 把task从delayQueue取出来之后，要搞成一个execution,并且持久化这个execution, 所以其实只有task(workflow　| task)　以及execution是需要持久化的。
+如果这时候发现某个task有依赖，那么给这个task的dependency的task'加一个监听器，之后等这个task'做完了之后，通过这个listener通知task依赖已经解决一个，然后check一下是否还有没有新的依赖？如果条件成熟，直接从持久层里面把execution取出来直接执行(不需要再进入delayQueue啦）
+
 而execution是包含taskid的，在此基础上又添加了执行相关的一些额外信息，之后就要进行execute这个过程。
 Execute是在excuteManager里面搞的，　有个execute函数，这个函数：
 首先新建一个job -> JobFactory.newJob(execution)，　这个newJob(execution)里面比较复杂，会根据job中pluginname等字段返回不同类型的job。
@@ -98,3 +100,24 @@ string_parameters {
 }
 
 shell_command = ""
+
+
+-------------------------------------
+关于workflow中几种模式的总结：
+任务类型：
+WORKFLOW
+CALENDER
+TRIGGER
+DECISION
+TEMPORARY
+PLUGIN
+重点是workflow/calender/trigger/plugin
+calender:传统的定时任务，到了规定时间就跑，可能是每天的定时，也可能是每个月的定时
+trigger是一个触发器
+plugin就是一堆job的plugin
+
+
+
+------------------------------------
+scheduleManager文件解析:
+

@@ -1,13 +1,10 @@
-//挑战程序设计竞赛－系列
-
+//AC
 // Author: RejudgeX
 // Level -> CF/TC -> Yellow
 // > -> Ag
 // -> F/L/A/G
 // -> Latency 「2017/5/15」
 
-//POJ 1741
-//树分治-点分治 （经典分治
 #include <iostream>
 #include <cmath>
 #include <cstring>
@@ -24,7 +21,6 @@ using namespace std;
 #define rep(i,a,n) for (int i=a;i<n;i++)
 #define per(i,a,n) for (int i=n-1;i>=a;i--)
 #define pb push_back
-#define mp make_pair
 #define all(x) (x).begin(),(x).end()
 #define SZ(x) ((int)(x).size())
 #define fi first
@@ -32,9 +28,9 @@ using namespace std;
 typedef vector<int> VI;
 typedef long long ll;
 typedef pair<int,int> PII;
-const ll mod = 1000000007;
+const ll MOD = 1000000007;
 
-ll powmod(ll a,ll b) {ll res=1;a%=mod;for(;b;b>>=1){if(b&1)res=res*a%mod;a=a*a%mod;}return res;}
+ll powMOD(ll a,ll b) {ll res=1;a%=MOD;for(;b;b>>=1){if(b&1)res=res*a%MOD;a=a*a%MOD;}return res;}
 // head
 
 inline void gn(long long &x){
@@ -47,36 +43,28 @@ inline void gn(int&x){long long t;gn(t);x=t;}
 inline void gn(unsigned long long&x){long long t;gn(t);x=t;}
 inline void gn(double&x){double t;scanf("%lf",&t);x=t;}
 inline void gn(long double&x){double t;scanf("%lf",&t);x=t;}
-typedef pair<int, int>pi;
-struct cmp
-
-{
-
-       bool operator()(const pi &t1,const pi &t2)
-
-       {
-
-            return t1.first < t2.first;//相当于less,大顶堆
-
-       }
-
-};
-priority_queue<pi, vector<pi>, cmp> tst;
-
-struct node {
-  int a, b;
-  bool operator<(const node &rhs) const {
-    return a < rhs.a;
-  }
-};
-priority_queue<node > bb;
-
 
 int main() {
-  pi b = make_pair(1, 2);
-  tst.push(b);
-  b = make_pair(7, 1);
-  tst.push(b);
-  printf("%d", tst.top().first);
+  freopen("in.txt", "r", stdin);
+  freopen("out.txt", "w", stdout);
+  int T, cases = 1; gn(T);
+  while(T--) {
+    int n, m;
+    gn(n); gn(m);
+    if(n < m) {
+      swap(n, m);
+    }
+    if(m <= 2) {
+      printf("Case #%d: %d\n", cases++, (n - n/3)*m);
+    }
+    else {
+      int ans = 0;
+      for(int i = 0; i < n; ++i) {
+        int tmp = m - (2 - i%3);
+        ans += m - tmp/3 - (tmp % 3 ? 1 : 0);
+      }
+      printf("Case #%d: %d\n", cases++, ans);
+    }
+  }
   return 0;
 }

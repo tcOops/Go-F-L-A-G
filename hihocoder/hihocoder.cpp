@@ -1,12 +1,9 @@
-//AC
-
 // Author: RejudgeX
 // Level -> CF/TC -> Yellow
 // > -> Ag
 // -> F/L/A/G
 // -> Latency 「2017/5/15」
 
-//
 #include <iostream>
 #include <cmath>
 #include <cstring>
@@ -46,90 +43,67 @@ inline void gn(unsigned long long&x){long long t;gn(t);x=t;}
 inline void gn(double&x){double t;scanf("%lf",&t);x=t;}
 inline void gn(long double&x){double t;scanf("%lf",&t);x=t;}
 
-const int N = 1000010;
-const int INF = 1e9;
-int sum[N<<2], col[N<<2];
-void pushUp(int idx) {
-  sum[idx] = sum[idx<<1] + sum[idx<<1|1];
-}
+struct student {
+  long long id;
+  int cnt;
+  vector<pair<int, int> > regis;
+}stu[10010];
+vector<pair<int, int> > ans;
 
-void pushDown(int idx, int l, int r) {
-  int mid = (l + r) >> 1;
-  sum[idx<<1] = col[idx]*(mid - l + 1);
-  sum[idx<<1|1] = col[idx]*(r - mid);
-  col[idx<<1] = col[idx<<1|1] = col[idx];
-  col[idx] = -1;
-}
+struct job{
+  int student_idx, office_id;
+  int begin, duration;
+  job(int studentIdx, int officeId, int begin_, int duration_) {
+    student_idx = studentIdx, office_id = officeId, begin = begin_, duration = duration_;
+  }
+  bool operator<(const job &rhs) const {
+    return begin > rhs.begin || (begin == rhs.begin && stu[student_idx].id > stu[rhs.student_idx].id);
+  }
+};
+priority_queue<job > pq;
+int pos[10010], pre[110];
+int N, M, K;
 
-void build(int idx, int l, int r) {
-  if(l == r) {
-    gn(sum[idx]);
-    col[idx] = sum[idx];
-    return ;
-  }
-  int mid = (l + r) >> 1;
-  build(idx<<1, l, mid);
-  build(idx<<1|1, mid+1, r);
-  pushUp(idx);
-}
-
-void modify(int idx, int l, int r, int L, int R, int val) {
-  if(l >= L && r <= R) {
-    sum[idx] = val * (r - l + 1);
-    col[idx] = val;
-    return ;
-  }
-
-  if(col[idx] != -1) {
-    pushDown(idx, l, r);
-  }
-  int mid = (l + r) >> 1;
-  if(L <= mid) {
-    modify(idx<<1, l, mid, L, R, val);
-  }
-  if(R > mid){
-    modify(idx<<1|1, mid+1, r, L, R, val);
-  }
-  pushUp(idx);
-}
-
-int query(int idx, int l, int r, int L, int R) {
-  if(l >= L && r <= R) {
-    return sum[idx];
-  }
-
-  if(col[idx] != -1) {
-    pushDown(idx, l, r);
-  }
-  int mid = (l + r) >> 1;
-  int ret = 0;
-  if(mid >= L) {
-    ret = ret + query(idx<<1, l, mid, L, R);
-  }
-  if(mid < R) {
-    ret = ret + query(idx<<1|1, mid+1, r, L, R);
-  }
-  return ret;
-}
-
+//sb 模拟
 int main() {
-  int n, m;
-  gn(n);
-  memset(col, -1, sizeof(col));
-  build(1, 1, n);
-  gn(m);
-  for(int i = 1; i <= m; ++i) {
-    int x, y, z, p;
-    gn(x);
-    if(x == 0) {
-      gn(y); gn(z);
-      int ans = query(1, 1, n, y, z);
-      cout << ans << endl;
+  gn(N); gn(M); gn(K);
+  for(int i = 0; i < N; ++i) {
+    int getTime;
+    gn(stu[i].id); gn(getTime); gn(stu[i].cnt);
+    for(int j = 0; j < stu[i].cnt; ++j) {
+      int x, y;
+      gn(x); gn(y);
+      stu[i].regis.push_back(make_pair(x, y));
+    }
+    pq.push(job(i, stu[i].regis[0].first, getTime + K, stu[i].regis[0].second));
+    pos[i] = 1;
+  }
+
+  memset(pre, -1, sizeof(pre));
+  while(!pq.empty()) {
+    job p = pq.top();
+  //  printf("%d %d %d %d\n", p.student_idx, p.office_id, p.begin, p.duration);
+    pq.pop();
+    int cur = p.student_idx;
+    if(pre[p.office_id] > p.begin) {
+      p.begin = pre[p.office_id];
+    }
+    int finishTime = p.begin + p.duration;
+    if(pos[cur] == stu[cur].cnt) {
+      ans.push_back(make_pair(cur, finishTime));
     }
     else {
-      gn(y); gn(z); gn(p);
-      modify(1, 1, n, y, z, p);
+      int jobId = stu[cur].regis[pos[cur]].first;
+      int durationTime = stu[cur].regis[pos[cur]].second;
+      pq.push(job(cur, jobId, finishTime + K, durationTime));
+      pos[cur]++;
     }
+    pre[p.office_id] = finishTime;
+  }
+
+  sort(ans.begin(), ans.end());
+  for(int i = 0; i < ans.size(); ++i) {
+    printf("%d\n", ans[i].second);
   }
   return 0;
 }

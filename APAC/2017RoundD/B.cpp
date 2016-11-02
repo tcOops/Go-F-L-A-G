@@ -48,18 +48,23 @@ int main() {
   freopen("in.txt", "r", stdin);
   freopen("out.txt", "w", stdout);
   int T, cases = 1; gn(T);
-<<<<<<< HEAD
-  int n, m;
-  while(T--) {
-    gn(n); gn(m);
-    printf("Case #%d: %.6lf\n", cases++, 1.0*(n-m)/(n+m));
-=======
   while(T--) {
     int n, m;
     gn(n); gn(m);
-    printf("Case #%d: ", cases++);
-    printf("%.6lf\n", (n - m) * 1.0 / (n + m));
->>>>>>> b4d0feae26d076e9250761bb3711f80e600a54d2
+    if(n < m) {
+      swap(n, m);
+    }
+    if(m <= 2) {
+      printf("Case #%d: %d\n", cases++, (n - n/3)*m);
+    }
+    else {
+      int ans = 0;
+      for(int i = 0; i < n; ++i) {
+        int tmp = m - (2 - i%3);
+        ans += m - tmp/3 - (tmp % 3 ? 1 : 0);
+      }
+      printf("Case #%d: %d\n", cases++, ans);
+    }
   }
   return 0;
 }

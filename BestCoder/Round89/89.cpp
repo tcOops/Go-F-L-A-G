@@ -17,6 +17,7 @@
 #include <vector>
 #include <map>
 #include <ctime>
+#include <bitset>
 //#include <bits/stdc++.h>
 using namespace std;
 #define rep(i,a,n) for (int i=a;i<n;i++)
@@ -45,67 +46,36 @@ inline void gn(unsigned long long&x){long long t;gn(t);x=t;}
 inline void gn(double&x){double t;scanf("%lf",&t);x=t;}
 inline void gn(long double&x){double t;scanf("%lf",&t);x=t;}
 
-const int N = 200010;
-set<int > g[N];
-queue<int > que;
-set<int > keep, del;
-int dist[N];
-int n, m, s;
-
-void solve(int s) {
-  while(!que.empty()) {
-    que.pop();
-  }
-  que.push(s);
-  keep.clear();
-  for(int i = 1; i <= n; ++i) {
-    if(i != s) {
-      keep.insert(i);
-    }
-  }
-
-  dist[s] = 0;
-  while(!que.empty()) {
-    int p = que.front();
-    que.pop();
-    del.clear();
-    for(set<int >::iterator it = keep.begin(); it != keep.end(); ++it) {
-      if(g[p].find(*it) == g[p].end()) {
-        que.push(*it);
-        del.insert(*it);
-        dist[*it] = dist[p] + 1;
-      }
-    }
-    for(set<int >::iterator it = del.begin(); it != del.end(); ++it) {
-      keep.erase(*it);
-    }
-  }
-}
+const int N = 1e6 + 10;
+int dp[N];
+int x, k, t;
+struct node {
+  int idx, val;
+} que[N];
 
 int main() {
-//  freopen("in.txt", "r", stdin);
-//  freopen("out.txt", "w", stdout);
-  int T; scanf("%d", &T);
+  int T;
+  scanf("%d", &T);
   while(T--) {
-    scanf("%d %d", &n, &m);
-    for(int i = 1; i <= n; ++i) {
-      g[i].clear();
-    }
-    for(int i = 0; i < m; ++i) {
-      int x, y;
-      scanf("%d %d", &x, &y);
-      g[x].insert(y);
-      g[y].insert(x);
-    }
-    memset(dist, -1, sizeof(dist));
-    scanf("%d", &s);
-    solve(s);
-    for(int i = 1; i <= n; ++i) {
-      if(i != s) {
-        printf("%s%d", (i != 2 && s == 1) || (s != 1 && i != 1) ? " " : "", dist[i]);
+    scanf("%d %d %d", &x, &k, &t);
+    dp[1] = 0;
+    int head = 0, tail = 0;
+    que[tail++] = node {1, 0};
+    for(int i = 2; i <= x; ++i) {
+      while(tail > head && i - que[head].idx > t) {
+        ++head;
       }
+      dp[i] = 1e9;
+      if(tail != head) dp[i] = que[head].val + 1;
+      if(i % k == 0 && k != 1) {
+        dp[i] = min(dp[i], dp[i/k] + 1);
+      }
+      while(tail > head && dp[i] <= que[tail-1].val) {
+        --tail;
+      }
+      que[tail++] = node {i, dp[i]};
     }
-    puts("");
+    printf("%d%s", dp[x], T == 0 ? "" : "\n");
   }
-  return 0;
+  cout << endl;
 }

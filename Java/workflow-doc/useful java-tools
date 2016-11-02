@@ -42,4 +42,47 @@ repository:
 
 mvn package -DskipTests
 
+｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜
+抽象类与接口：
+http://www.cnblogs.com/dolphin0520/p/3811437.html
+｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜
 
+
+｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜
+Http长连接与短连接：
+http://www.cnblogs.com/cswuyg/p/3653263.html
+｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜｜
+
+
+关于java中的synchronized
+http://www.cnblogs.com/devinzhang/archive/2011/12/14/2287675.html
+java默认构造函数:
+http://www.cnblogs.com/findumars/p/3247275.html
+Hashtable继承自Dictionary类，而HashMap继承自AbstractMap类。但二者都实现了Map接口。
+关于hashmap hashtable等总结:
+http://blog.csdn.net/kingzone_2008/article/details/8179701
+关于java静态方法　静态类:
+http://blog.csdn.net/zhandoushi1982/article/details/8453522/
+
+
+java LinkedHashMap:
+http://zhangshixi.iteye.com/blog/673789
+
+
+Mybatis的简单介绍：
+http://baike.baidu.com/link?url=P7glCP3FHBXcQfMaCyg0s9vuuvnkjjz-JupS4Vv4h94KiqBgPJHgm5x1UBAmZ8_N4ooXqUG0X5kGgMt5_21mBK
+
+Mybatis配置mapper
+http://elim.iteye.com/blog/1841033
+
+thrift相关:
+http://www.aboutyun.com/thread-7139-1-1.html
+http://itindex.net/detail/46937-thrift-%E5%8E%9F%E7%90%86-java
+http://houjixin.blog.163.com/blog/static/35628410201501654039437/
+
+抽象类实现接口:
+http://blog.csdn.net/youyedemeng/article/details/7109754
+
+Mybatis是类似hibernate的一个ORM模型，
+h2是内存数据库
+mybatis可以选择对mysql或者h2操作, 可以在mybatis-config.xml中进行配置，　然后在secret.properties中设置当前数据库的工作环境(仅针对workflow)

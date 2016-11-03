@@ -40,3 +40,7 @@
 ###大连网赛1001　非常经典的题目，burnside定理得到：F(n) = 1/n * sigma(f(gcd(i, n)))，这是一个非常经典的问题，　可以转化为： F(n) = ​1/n * ∑​ (d∣n)​​f(d)φ(​n/d​​)(训练指南有证明，按n的因子分类), 时间复杂度为O(log(n) * sqrt(n))
 
 ###ISPC 2012 Contructor
+
+### 关于线分割平面的递推: (http://www.cnblogs.com/luosuo10/p/5259676.html)[http://www.cnblogs.com/luosuo10/p/5259676.html]
+
+###紫书的8-11章的所有习题， 写个solution

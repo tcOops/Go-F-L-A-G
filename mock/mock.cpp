@@ -1,3 +1,5 @@
+//APAC2017 Round C
+//AC
 // Author: RejudgeX
 // Level -> CF/TC -> Yellow
 // > -> Ag
@@ -20,7 +22,6 @@ using namespace std;
 #define rep(i,a,n) for (int i=a;i<n;i++)
 #define per(i,a,n) for (int i=n-1;i>=a;i--)
 #define pb push_back
-#define mp make_pair
 #define all(x) (x).begin(),(x).end()
 #define SZ(x) ((int)(x).size())
 #define fi first
@@ -29,7 +30,8 @@ typedef vector<int> VI;
 typedef long long ll;
 typedef pair<int,int> PII;
 const ll MOD = 1000000007;
-ll powmod(ll a,ll b) {ll res=1;a%=MOD;for(;b;b>>=1){if(b&1)res=res*a%MOD;a=a*a%MOD;}return res;}
+
+ll powMOD(ll a,ll b) {ll res=1;a%=MOD;for(;b;b>>=1){if(b&1)res=res*a%MOD;a=a*a%MOD;}return res;}
 // head
 
 inline void gn(long long &x){
@@ -43,47 +45,304 @@ inline void gn(unsigned long long&x){long long t;gn(t);x=t;}
 inline void gn(double&x){double t;scanf("%lf",&t);x=t;}
 inline void gn(long double&x){double t;scanf("%lf",&t);x=t;}
 
-const int N = 2e5 + 10;
-char a[N<<1], b[N];
+/*
+const int N = 21;
+char maze[N][N];
+int vis[N][N];
+int fx[4] = {0, 0, 1, -1};
+int fy[4] = {1, -1, 0, 0};
+int R, C, RS, CS, S;
+double Q, P;
+double ans;
 
-//倍增 -> 后缀数组
-//Start index: Sa -> 1, rank -> 0, [sa[1], sa[2]....sa[n] = range(0, n)] | [(rank[0], rank[2]....rank[n-1] = range(1, n+1)]
-
-int wa[N], wb[N], wv[N], Ws[N];
-int cmp(int *r,int a,int b,int l) {
-    return r[a]==r[b]&&r[a+l]==r[b+l];
-}
-
-void da(const char *r, int *sa, int n, int m){
-    int i, j, p, *x=wa, *y=wb, *t;
-    for(i = 0; i < m; ++i) Ws[i] = 0;
-    for(i = 0; i < n; ++i) Ws[x[i] = r[i]]++;
-    for(i = 1; i < m; ++i) Ws[i] += Ws[i-1];
-    for(i = n-1; i >= 0; --i) sa[--Ws[x[i]]] = i;
-
-    for(j = 1, p = 1; p < n; j *= 2, m = p) {
-        for(p = 0, i = n-j; i < n; ++i) y[p++] = i;
-        for(i = 0; i < n; ++i) if(sa[i] >= j) y[p++] = sa[i] - j;
-        for(i = 0; i < n; ++i) wv[i] = x[y[i]];
-        for(i = 0; i < m; ++i) Ws[i] = 0;
-        for(i = 0; i < n; ++i) Ws[wv[i]]++;
-        for(i = 1; i < m; ++i) Ws[i] += Ws[i-1];
-        for(i = n-1; i >= 0; --i) sa[--Ws[wv[i]]] = y[i];
-        for(t = x, x = y, y = t, p = 1, x[sa[0]]=0,i = 1; i < n; ++i)
-            x[sa[i]] = cmp(y,sa[i-1],sa[i],j) ? p-1 : p++;
+void solve(int x, int y, double sum, int cnt) {
+  if(cnt == S) {
+    if(sum > ans) {
+      ans = sum;
     }
+    return ;
+  }
+
+  for(int i = 0; i < 4; ++i) {
+    int dx = x + fx[i];
+    int dy = y + fy[i];
+    if(dx < 0 || dx >= R || dy < 0 || dy >= C) {
+      continue;
+    }
+
+    double fac = Q;
+    if(maze[dx][dy] == 'A') {
+      fac = P;
+    }
+
+    double res = 1.0;
+    for(int i = 1; i <= vis[dx][dy]; ++i) {
+      res = (1 - fac) * res;
+    }
+  //  printf("%.7lf\n", res);
+    vis[dx][dy]++;
+    solve(dx, dy, sum + res*fac, cnt+1);
+    vis[dx][dy]--;
+  }
 }
 
-int sa[N], Rank[N], height[N];
-//Get height
-void calheight(const char *r, int *sa, int n) {
-    int i, j, k = 0;
-    for(i = 1; i <= n; ++i) Rank[sa[i]] = i;
-    for(i = 0; i < n; height[Rank[i++]] = k)
-        for(k ? --k : 0, j = sa[Rank[i]-1]; r[i+k] == r[j+k]; ++k);
+int main() {
+  freopen("in.txt", "r", stdin);
+  freopen("out.txt", "w", stdout);
+  int T, cases = 1; gn(T);
+  char ss[N<<1];
+  while(T--) {
+    scanf("%d%d%d%d%d", &R, &C, &RS, &CS, &S);
+    scanf("%lf%lf", &P, &Q);
+    getchar();
+    for(int i = 0; i < R; ++i) {
+      gets(ss);
+      for(int j = 0; j < C; ++j) {
+        maze[i][j] = ss[j<<1];
+      }
+    }
+    memset(vis, 0, sizeof(vis));
+    ans = 0.0;
+    solve(RS, CS, 0.0, 0);
+    printf("Case #%d: %.7lf\n", cases++, ans);
+  }
+  return 0;
+}
+*/
+
+/*
+const int N = 3010;
+int dp[N][N];
+int R, C, K;
+set<pair<int, int> > block;
+
+int main() {
+  int T, cases = 1;
+  scanf("%d", &T);
+  while(T--) {
+    scanf("%d %d %d", &R, &C, &K);
+    block.clear();
+    for(int i = 0; i < K; ++i) {
+      int x, y;
+      scanf("%d %d", &x, &y);
+      ++x, ++y;
+      block.insert(make_pair(x, y));
+    }
+
+    memset(dp, 0, sizeof(dp));
+    int ans = 0;
+    for(int i = 1; i <= R; ++i) {
+      if(block.find(make_pair(i, 1)) == block.end()) {
+        dp[i][1] = 1;
+        ++ans;
+      }
+      else {
+        dp[i][1] = 0;
+      }
+    }
+    for(int i = 1; i <= C; ++i) {
+      if(block.find(make_pair(1, i)) == block.end()) {
+        dp[1][i] = 1;
+        ++ans;
+      }
+      else {
+        dp[1][i] = 0;
+      }
+    }
+
+    for(int i = 2; i <= R; ++i) {
+      for(int j = 2; j <= C; ++j) {
+        if(block.find(make_pair(i, j)) == block.end()) {
+          dp[i][j] = min(dp[i-1][j], min(dp[i][j-1], dp[i-1][j-1])) + 1;
+        }
+        else {
+          dp[i][j] = 0;
+        }
+        ans += dp[i][j];
+      }
+    }
+    printf("Case #%d: %d\n", cases++, ans);
+  }
+  return 0;
+}
+*/
+
+/*
+const int N = 10010;
+int in[N];
+vector<int > g[N];
+char st[N];
+map<string, int> mp;
+string tmp, res;
+queue<int > que;
+bool def[N];
+
+int main() {
+  freopen("in.txt", "r", stdin);
+  freopen("out.txt", "w", stdout);
+  int T, cases = 1;
+  scanf("%d", &T);
+  while(T--) {
+    int n, cnt = 0;
+    scanf("%d", &n);
+    mp.clear();
+    memset(in, 0, sizeof(in));
+    memset(def, 0, sizeof(def));
+    while(!que.empty()) {
+      que.pop();
+    }
+    for(int i = 0; i < n; ++i) {
+      scanf("%s", st);
+      tmp = "";
+      int j = 0, src, dep;
+      for(; st[j] != '='; ++j) {
+        tmp += st[j];
+      }
+      while(st[j] != '(') {
+        ++j;
+      }
+
+      if(mp.find(tmp) == mp.end()) {
+        mp[tmp] = cnt++;
+        g[cnt-1].clear();
+      }
+      src = mp[tmp];
+      def[src] = true;
+      j += 1;
+      while(st[j] != ')') {
+        int k = j;
+        res = "";
+        while(st[k] != ')' && st[k] != ',') {
+          res += st[k++];
+        }
+        if(mp.find(res) == mp.end()) {
+          mp[res] = cnt++;
+          g[cnt-1].clear();
+        }
+        dep = mp[res];
+        in[src]++, g[dep].push_back(src);
+        if(st[k] == ')') {
+          break;
+        }
+        j = k + 1;
+      }
+    }
+
+    for(int i = 0; i < cnt; ++i) {
+    //  printf("%d ", in[i]);
+      if(in[i] == 0 && def[i]) {
+        que.push(i);
+      }
+    }
+
+    int num = 0;
+    while(!que.empty()) {
+      int p = que.front();
+      que.pop(), ++num;
+      for(auto v : g[p]) {
+        in[v]--;
+        if(in[v] == 0) {
+          que.push(v);
+        }
+      }
+    }
+    if(num == cnt) {
+      printf("Case #%d: GOOD\n", cases++);
+    }
+    else {
+      printf("Case #%d: BAD\n", cases++);
+    }
+  }
+  return 0;
+}
+*/
+
+const int N = 210;
+int dp[N][N];
+int n;
+struct node {
+  int a, d;
+  int idx;
+}o[N], b[N], c[N];
+
+bool cmp1(const node &a, const node &b) {
+  return a.a < b.a;
 }
 
-int main(){
-    
-    return 0;
+bool cmp2(const node &a, const node &b) {
+  return a.d < b.d;
+}
+
+int tag = 0;
+int solve(int u, int v) {
+  if(dp[u][v] != -1) {
+    return dp[u][v];
+  }
+  bool sta = false;
+  int ans = -1e9;
+  for(int i = n - 1; i >= 0; --i) {
+    if(b[i].a <= o[u].a) {
+      break;
+    }
+    sta = true;
+    int nextv = v;
+    if(b[i].d > o[v].d) {
+      nextv = b[i].idx;
+    }
+    int res = solve(b[i].idx, nextv);
+    if(res > ans) {
+      ans = res;
+    }
+  }
+  for(int i = n - 1; i >= 0; --i) {
+    if(c[i].d <= o[v].d) {
+      break;
+    }
+    sta = true;
+    int nextu = u;
+    if(c[i].a > o[v].a) {
+      nextu = c[i].idx;
+    }
+    int res = solve(nextu, c[i].idx);
+    if(res > ans) {
+      ans = res;
+    }
+  }
+  if(!sta) {
+    return (dp[u][v] = 1);
+  }
+  else {
+    return (dp[u][v] = 1 - ans);
+  }
+}
+
+int main() {
+  freopen("in.txt", "r", stdin);
+  freopen("out.txt", "w", stdout);
+  int T, cases = 1;
+  scanf("%d", &T);
+  while(T--) {
+    scanf("%d", &n);
+    for(int i = 0; i < n; ++i) {
+      scanf("%d %d", &o[i].a, &o[i].d);
+      o[i].idx = i;
+      b[i].a = c[i].a = o[i].a;
+      b[i].d = c[i].d = o[i].d;
+      b[i].idx = c[i].idx = o[i].idx;
+    }
+
+    sort(b, b+n, cmp1);
+    sort(c, c+n, cmp2);
+    memset(dp, -1, sizeof(dp));
+
+    bool suc = false;
+    for(int i = 0; i < n; ++i) {
+      int res = solve(i, i);
+      if(res > 0) {
+        suc = true;
+      }
+    }
+    printf("Case #%d: %s\n", cases++, suc ? "YES" : "NO");
+  }
+  return 0;
 }

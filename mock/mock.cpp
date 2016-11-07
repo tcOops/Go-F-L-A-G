@@ -257,7 +257,8 @@ int main() {
 }
 */
 
-const int N = 210;
+/*
+const int N = 2010;
 int dp[N][N];
 int n;
 struct node {
@@ -347,6 +348,58 @@ int main() {
       }
     }
     printf("Case #%d: %s\n", cases++, suc ? "YES" : "NO");
+  }
+  return 0;
+}
+*/
+
+const int N = 4010;
+int a[N], d[N];
+
+bool solve(int cnt) {
+  if(cnt == 0) {
+    return 0;
+  }
+
+  int mx = 0, my = 0;
+  for(int i = 0; i < cnt; ++i) {
+    if(a[i] > mx) {
+      mx = a[i];
+    }
+    if(d[i] > my) {
+      my = d[i];
+    }
+  }
+
+  int nxt = 0;
+  for(int i = 0; i < cnt; ++i) {
+    if(a[i] < mx && d[i] < my) {
+      a[nxt] = a[i], d[nxt++] = d[i];
+    }
+    else if(a[i] == mx && d[i] == my) {
+      return true;
+    }
+  }
+  return solve(nxt);
+}
+
+int main() {
+  freopen("in.txt", "r", stdin);
+  freopen("out.txt", "w", stdout);
+  int T, cases = 1;
+  scanf("%d", &T);
+  while(T--) {
+    int n;
+    scanf("%d", &n);
+    for(int i = 0; i < n; ++i) {
+      scanf("%d %d", &a[i], &d[i]);
+    }
+    if(solve(n)) {
+      printf("Case #%d: YES\n", cases++);
+    }
+    else {
+      printf("Case #%d: NO\n", cases++);
+    }
   }
   return 0;
 }

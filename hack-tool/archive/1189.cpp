@@ -1,80 +1,40 @@
-//http://hihocoder.com/contest/hiho91/problem/1
-//经典题 贪心 + dp + 单调队列优化
-
-#include<cstdio>
-#include<cstring>
-#include<iostream>
-#include<algorithm>
+#include <cstdio>
+#include <iostream>
+#include <algorithm>
 using namespace std;
+const int MOD = 998244353;
+const int N = 500010;
+char s[N];
+int a[N], last[30];
+long long dp[N], sum[N];
 
-const int M = 5010;
-const int N = 1010;
-int n, m, k;
-int dp[N][M];
-int tail[M], head[M];
-int q[M][N];
-
-struct node{
-    int a, b, c;
-    bool operator <(const node &chr) const{
-        return b*chr.c > c*chr.b;
-    }
-}event[N];
-
-int cal(int p, int v, int k){
-    int num = (v - p)/(event[k].c);
-    int val = event[k].a - m * event[k].b;
-    int ret = 0;
-    for(int i = 0; i < num; ++i){
-        ret += (val + (m-p)*event[k].b);
-        p = p + event[k].c;
+long long Rev(long long a, long long b) {
+    long long ret = 1;
+    while(b) {
+        if(b & 1) {
+            ret = ret * a % MOD;
+        }
+        b >>= 1, a = a * a % MOD;
     }
     return ret;
 }
 
-int main(){
-    scanf("%d%d%d", &n, &m, &k);
-    for(int i = 1;  i <= n; ++i){
-        scanf("%d%d%d", &event[i].a, &event[i].b, &event[i].c);
+int main() {
+    int n;
+    scanf("%d", &n);
+    scanf("%s", s+1);
+    for(int i = 1; i <= n; ++i) {
+        scanf("%d", &a[i]);
     }
-    
-    sort(event+1, event+n+1);
-    memset(dp, 0, sizeof(dp));
-    
-    
-    for(int i = 1; i <= n; ++i){
-        memset(tail, -1, sizeof(tail));
-        memset(head, 0, sizeof(head));
-        
-        for(int j = 0; j < m; ++j){
-            int r = j % event[i].c;
-            q[r][++tail[r]] = j;
-            while(tail[r] > head[r]){
-                int val1 = dp[i-1][q[r][tail[r]]] + cal(q[r][tail[r]], j, i);
-                int val2 = dp[i-1][q[r][tail[r]-1]] + cal(q[r][tail[r]-1], j, i);
-                if(val1 >= val2){
-                    q[r][tail[r]-1] = q[r][tail[r]];
-                    tail[r]--;
-                }
-                else{
-                    break;
-                }
-            }
-            
-            while((j - q[r][head[r]])/event[i].c > k){
-                ++head[r];
-            }
-            dp[i][j] = dp[i-1][q[r][head[r]]] + cal(q[r][head[r]], j, i);
-        }
+    long long rev = Rev(100, MOD - 2);
+    dp[0] = 1;
+    for(int i = 1; i <= n; ++i) {
+        dp[i] = dp[i-1] * a[i] % MOD + ((dp[i-1] * 2 + MOD - sum[last[s[i]-'a']]) * (100 - a[i]) % MOD);
+        dp[i] = dp[i] % MOD * rev % MOD;
+        sum[i] = dp[i-1] * (100 - a[i]) % MOD + (sum[last[s[i]-'a']] * a[i] % MOD);
+        sum[i] = sum[i] * rev % MOD;
+        last[s[i]-'a'] = i;
     }
-
-    int ans = 0;
-    for(int i = m-1; i >= 0; --i){
-        if(dp[n][i] > ans){
-            ans = dp[n][i];
-        }
-    }
-    printf("%d\n", ans);
+    printf("%lld\n", (dp[n] + MOD) % MOD);
     return 0;
 }
-

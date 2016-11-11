@@ -1,11 +1,12 @@
+//AC
+
 // Author: RejudgeX
 // Level -> CF/TC -> Yellow
 // > -> Ag
 // -> F/L/A/G
 // -> Latency 「2017/5/15」
 
-//Google mock-contest 1
-//RejudgeX: 2016/8/3 22:35 - 24:00
+//
 #include <iostream>
 #include <cmath>
 #include <cstring>
@@ -45,64 +46,44 @@ inline void gn(unsigned long long&x){long long t;gn(t);x=t;}
 inline void gn(double&x){double t;scanf("%lf",&t);x=t;}
 inline void gn(long double&x){double t;scanf("%lf",&t);x=t;}
 
-const int N = 110;
+const int N = 100010;
 const int INF = 0x3f3f3f3f;
-int g[N][N];
-int dist[N][N][31], d[N], newD[N];
-int cnt;
-
-void add(int n, int t) {
-  for(int k = 1; k <= n; ++k) {
-    for(int i = 1; i <= n; ++i) {
-      for(int j = 1; j <= n; ++j) {
-        {
-          if(dist[i][k][t-1] + dist[k][j][t-1] < dist[i][j][t]) {
-            dist[i][j][t] = dist[i][k][t-1] + dist[k][j][t-1];
-          }
-        }
-      }
-    }
-  }
-}
-
-void gao(int n, int m) {
-  for(int t = 2; (1<<(t - 1)) <= m; ++t) {
-    add(n, t);
-    cnt = t;
-  }
-}
+bool vis[30][30];
+int pos[30], dp[N];
+char s[N];
 
 int main() {
-  int n, m;
-  gn(n); gn(m);
-  memset(dist, INF, sizeof(dist));
-  for(int i = 1; i <= n; ++i) {
-    for(int j = 1; j <= n; ++j) {
-      gn(dist[i][j][1]);
-    }
-  }
-  for(int i = 1; i <= n; ++i) {
-    dist[i][i][1] = INF;
-  }
-  gao(n, m);
+  int n, m; gn(n);
+  scanf("%s", s);
+  gn(m);
+  char fbd[10];
 
-  long long ans = 0;
-  for(int i = cnt; i >= 1; --i) {
-    memset(newD, INF, sizeof(newD));
-    for(int j = 1; j <= n; ++j) {
-      for(int k = 1; k <= n; ++k) {
-        if(newD[j] > d[k] + dist[k][j][i]) {
-          newD[j] = d[k] + dist[k][j][i];
-        }
-      }
+  memset(vis, 0, sizeof(vis));
+  for(int i = 0; i < m; ++i) {
+    scanf("%s", fbd);
+    vis[fbd[0]-'a'][fbd[1]-'a'] = 1;
+    vis[fbd[1]-'a'][fbd[0]-'a'] = 1;
+  }
+
+  memset(pos, -1, sizeof(pos));
+
+  for(int i = 0; i < n; ++i) {
+    dp[i] = i;
+    int cur = s[i] - 'a';
+    for(int j = 0; j < 26; ++j) {
+      if(vis[cur][j] || pos[j] == -1) continue;
+      dp[i] = min(dp[i], dp[pos[j]] + (i - pos[j] - 1));
     }
-    for(int j = 1; j <= n; ++j) {
-      if(newD[j] <= m) {
-        memcpy(d+1, newD+1, n*sizeof(int));
-        ans += (1<<(i-1));
-      //  m -= 1<<(i-1);
-        break;
-      }
+    if(pos[cur] == -1 || (dp[pos[cur]] + i - pos[cur]) > dp[i]) {
+      pos[cur] = i;
+    }
+  }
+
+  int ans = INF;
+  for(int i = 0; i < n; ++i) {
+  //  printf("%d ", dp[i]);
+    if(dp[i] + (n - i - 1) < ans) {
+      ans = dp[i] + n - i - 1;
     }
   }
   cout << ans << endl;

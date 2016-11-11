@@ -34,7 +34,7 @@ const int N = 20010;
 int dfn[N], low[N];
 int num, cnt;
 int head[N], nxt[N];
-int edges[N*20];
+int edges[N<<1];
 vector<int > g[N];
 bool isCut[N];
 
@@ -52,7 +52,6 @@ int dfs(int u, int fa) {
     bool ff = false;
     
     for(auto v : g[u]) {
-    //    int v = edges[i];
         if(!dfn[v]) {
             ++childCnt;
             int lowv = dfs(v, u);
@@ -87,7 +86,7 @@ int main() {
     for(int i = 0; i < m; ++i) {
         int x, y;
         scanf("%d %d", &x, &y);
-    //    addEdge(x, y), addEdge(y, x);
+     //   addEdge(x, y), addEdge(y, x);
         g[x].push_back(y), g[y].push_back(x);
     }
     

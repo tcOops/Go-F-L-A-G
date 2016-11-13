@@ -257,7 +257,7 @@ int main() {
 }
 */
 
-const int N = 210;
+const int N = 2010;
 int dp[N][N];
 int n;
 struct node {
@@ -275,7 +275,7 @@ bool cmp2(const node &a, const node &b) {
 
 int tag = 0;
 int solve(int u, int v) {
-  if(dp[u][v] != -1) {
+  if(dp[u][v] != -1e9) {
     return dp[u][v];
   }
   bool sta = false;
@@ -290,8 +290,8 @@ int solve(int u, int v) {
       nextv = b[i].idx;
     }
     int res = solve(b[i].idx, nextv);
-    if(res > ans) {
-      ans = res;
+    if(1 - res > ans) {
+      ans = 1 - res;
     }
   }
   for(int i = n - 1; i >= 0; --i) {
@@ -300,19 +300,19 @@ int solve(int u, int v) {
     }
     sta = true;
     int nextu = u;
-    if(c[i].a > o[v].a) {
+    if(c[i].a > o[u].a) {
       nextu = c[i].idx;
     }
     int res = solve(nextu, c[i].idx);
-    if(res > ans) {
-      ans = res;
+    if(1 - res > ans) {
+      ans = 1 - res;
     }
   }
   if(!sta) {
-    return (dp[u][v] = 1);
+    return (dp[u][v] = 0);
   }
   else {
-    return (dp[u][v] = 1 - ans);
+    return (dp[u][v] = ans);
   }
 }
 
@@ -333,12 +333,16 @@ int main() {
 
     sort(b, b+n, cmp1);
     sort(c, c+n, cmp2);
-    memset(dp, -1, sizeof(dp));
-
+  //  memset(dp, -1, sizeof(dp));
+    for(int i = 0; i < n; ++i) {
+      for(int j = 0; j < n; ++j) {
+        dp[i][j] = -1e9;
+      }
+    }
     bool suc = false;
     for(int i = 0; i < n; ++i) {
       int res = solve(i, i);
-      if(res > 0) {
+      if(1 - res > 0) {
         suc = true;
       }
     }

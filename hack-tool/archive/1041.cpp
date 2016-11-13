@@ -6,7 +6,7 @@
 // -> F/L/A/G
 // -> Latency 「2017/5/15」
 
-
+//
 #include <iostream>
 #include <cmath>
 #include <cstring>
@@ -18,7 +18,6 @@
 #include <vector>
 #include <map>
 #include <ctime>
-#include <bitset>
 //#include <bits/stdc++.h>
 using namespace std;
 #define rep(i,a,n) for (int i=a;i<n;i++)
@@ -47,77 +46,89 @@ inline void gn(unsigned long long&x){long long t;gn(t);x=t;}
 inline void gn(double&x){double t;scanf("%lf",&t);x=t;}
 inline void gn(long double&x){double t;scanf("%lf",&t);x=t;}
 
-const int N = 110;
-vector<int> g[N];
-bitset<N > f[N];
-bool used[N][N];
-int a[N], n, m, idx;
-bool suc;
-
-void pre(int u, int fa) {
-  f[u][u] = 1;
-  for(auto v : g[u]) {
-    if(v == fa) continue;
-    pre(v, u);
-    f[u] |= f[v];
-  }
+const int N = 100010;
+const int INF = 1e9;
+int sum[N<<2], col[N<<2];
+void pushUp(int idx) {
+  sum[idx] = sum[idx<<1] + sum[idx<<1|1];
 }
 
-void solve(int u, int fa) {
-  if(idx < m && a[idx] == u) {
-    ++idx;
+void pushDown(int idx, int l, int r) {
+  int mid = (l + r) >> 1;
+  sum[idx<<1] = col[idx]*(mid - l + 1);
+  sum[idx<<1|1] = col[idx]*(r - mid);
+  col[idx<<1] = col[idx<<1|1] = col[idx];
+  col[idx] = -1;
+}
+
+void build(int idx, int l, int r) {
+  if(l == r) {
+    gn(sum[idx]);
+    col[idx] = sum[idx];
+    return ;
   }
-  if(idx == m) {
-    suc = true;
+  int mid = (l + r) >> 1;
+  build(idx<<1, l, mid);
+  build(idx<<1|1, mid+1, r);
+  pushUp(idx);
+}
+
+void modify(int idx, int l, int r, int L, int R, int val) {
+  if(l >= L && r <= R) {
+    sum[idx] = val * (r - l + 1);
+    col[idx] = val;
     return ;
   }
 
-  while(idx < m) {
-    int res = idx;
-    int need = a[idx];
-    for(auto v : g[u]) {              
-      if(v == fa) continue;
-      if(f[v][need] && !used[u][v]) {
-        used[u][v] = true;
-        solve(v, u);
-        break;
-      }
-    }
-    if(res == idx) {
-      break;
-    }
+  if(col[idx] != -1) {
+    pushDown(idx, l, r);
   }
+  int mid = (l + r) >> 1;
+  if(L <= mid) {
+    modify(idx<<1, l, mid, L, R, val);
+  }
+  if(R > mid){
+    modify(idx<<1|1, mid+1, r, L, R, val);
+  }
+  pushUp(idx);
+}
+
+int query(int idx, int l, int r, int L, int R) {
+  if(l >= L && r <= R) {
+    return sum[idx];
+  }
+
+  if(col[idx] != -1) {
+    pushDown(idx, l, r);
+  }
+  int mid = (l + r) >> 1;
+  int ret = 0;
+  if(mid >= L) {
+    ret = ret + query(idx<<1, l, mid, L, R);
+  }
+  if(mid < R) {
+    ret = ret + query(idx<<1|1, mid+1, r, L, R);
+  }
+  return ret;
 }
 
 int main() {
-  int T; gn(T);
-  while(T--) {
-    gn(n);
-    memset(used, true, sizeof(used));
-    suc = false;
-    for (int i = 1 ; i <= n ; i ++) {
-          g[i].clear();
-          f[i].reset();
-    }
-    for(int i = 1; i < n; ++i) {
-      int x, y;
-      gn(x); gn(y);
-      used[x][y] = used[y][x] = false;
-      g[x].push_back(y), g[y].push_back(x);
-    }
-    gn(m);
-    for(int i = 0; i < m; ++i) {
-      gn(a[i]);
-    }
-    pre(1, 0);
-
-    idx = 0;
-    solve(1, 0);
-    if(suc) {
-      cout << "YES" << endl;
+  int n, m;
+  gn(n);
+  memset(col, -1, sizeof(col));
+  build(1, 1, n);
+  gn(m);
+  for(int i = 1; i <= m; ++i) {
+    int x, y, z, p;
+    gn(x);
+    if(x == 0) {
+      gn(y); gn(z);
+      int ans = query(1, 1, n, y, z);
+      cout << ans << endl;
     }
     else {
-      cout << "NO" << endl;
+      gn(y); gn(z); gn(p);
+      modify(1, 1, n, y, z, p);
     }
   }
   return 0;

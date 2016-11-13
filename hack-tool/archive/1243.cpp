@@ -1,48 +1,83 @@
-// Author:tcOops
+// Author: RejudgeX
 // Level -> CF/TC -> Yellow
 // > -> Ag
 // -> F/L/A/G
 // -> Latency 「2017/5/15」
-#include<iostream>
-#include<cmath>
-#include<cstring>
-#include<cstdio>
-#include<algorithm>
+
+//Tree Dp
+//考虑当前节点与父节点之间是否有操作的关系
+//dp[i][2]->表示未进行操作, dp[i][0]->进行操作1, dp[i][1]->进行操作了2
+#include <iostream>
+#include <cmath>
+#include <cstring>
+#include <string>
+#include <cstdio>
+#include <set>
+#include <algorithm>
+#include <queue>
+#include <vector>
+#include <map>
+#include <ctime>
+//#include <bits/stdc++.h>
 using namespace std;
-struct bian{
-    int next,point;
-}b[210000];
-int p[110000],n,dp[110000][3],len,father[110000];
-void ade(int k1,int k2){
-    b[++len]=(bian){p[k1],k2}; p[k1]=len;
+#define rep(i,a,n) for (int i=a;i<n;i++)
+#define per(i,a,n) for (int i=n-1;i>=a;i--)
+#define pb push_back
+#define mp make_pair
+#define all(x) (x).begin(),(x).end()
+#define SZ(x) ((int)(x).size())
+#define fi first
+#define se second
+typedef vector<int> VI;
+typedef long long ll;
+typedef pair<int,int> PII;
+const ll mod = 1000000007;
+
+ll powmod(ll a,ll b) {ll res=1;a%=mod;for(;b;b>>=1){if(b&1)res=res*a%mod;a=a*a%mod;}return res;}
+// head
+
+inline void gn(long long &x){
+    int sg=1;
+    char c;while(((c=getchar())<'0'||c>'9')&&c!='-');c=='-'?(sg=-1,x=0):(x=c-'0');
+    while((c=getchar())>='0'&&c<='9')x=x*10+c-'0';x*=sg;
 }
-void add(int k1,int k2){
-    ade(k1,k2); ade(k2,k1);
+
+inline void gn(int&x){long long t;gn(t);x=t;}
+inline void gn(unsigned long long&x){long long t;gn(t);x=t;}
+inline void gn(double&x){double t;scanf("%lf",&t);x=t;}
+inline void gn(long double&x){double t;scanf("%lf",&t);x=t;}
+const int N = 100010;
+
+int dp[N][3];
+vector<int > g[N];
+
+void solve(int u, int fa) {
+  dp[u][0] = dp[u][1] = 1;
+  dp[u][2] = 0;
+
+  for(auto v : g[u]) {
+    if(v == fa) continue;
+    solve(v, u);
+  }
+
+  dp[fa][0] += dp[u][2];
+  int s = dp[fa][1], t = dp[fa][2];
+  dp[fa][1] = min(dp[u][0] + s, dp[u][1] + t);
+  dp[fa][2] = min(min(dp[u][0], dp[u][1]) + t, dp[u][1] + s - 1);
 }
-void treedp(int k1,int k2){
-    for (int i=p[k1];i;i=b[i].next){
-        int j=b[i].point;
-        if (j!=k2){
-            treedp(j,k1); dp[k1][0]+=dp[j][1];
-        }
-    }
-    dp[k1][0]++;
-    for (int i=p[k1];i;i=b[i].next){
-        int j=b[i].point;
-        if (j!=k2){
-            int pre=dp[k1][1];
-            dp[k1][1]=min(dp[k1][1]+dp[j][0],min(dp[k1][1],dp[k1][2])+dp[j][2]+1);
-            dp[k1][2]=min(dp[k1][2]+dp[j][0],pre+dp[j][2]);
-        }
-    }
-    dp[k1][2]=min(dp[k1][2],dp[k1][1]);
-}
-int main(){
-    scanf("%d",&n);
-    for (int i=1;i<n;i++){
-        int k1,k2; scanf("%d%d",&k1,&k2); add(k1,k2);
-    }
-    treedp(1,0);
-    printf("%d\n",min(dp[1][0],dp[1][1]));
-    return 0;
+
+int main() {
+  int n;
+  gn(n);
+  for(int i = 1; i < n; ++i) {
+    int x, y;
+    gn(x); gn(y);
+    g[x].push_back(y);
+    g[y].push_back(x);
+  }
+
+  solve(1, 0);
+  int ans = min(min(dp[1][0], dp[1][1]), dp[1][2]);
+  cout << ans << endl;
+  return 0;
 }

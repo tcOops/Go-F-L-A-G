@@ -1,60 +1,59 @@
 #include <cstdio>
-#include <iostream>
 #include <cstring>
 #include <algorithm>
+#include <queue>
+#include <vector>
 using namespace std;
-#define minab(a, b) ((a) < (b) ? (a) : (b))
-const int N = 1000010;
+const int N = 1e5 + 10;
+const int INF = 0x3f3f3f3f;
 
-int p[N<<1];
-char s[N<<1];
-string st;
-int mx, idx;//the Rightest postion can be reached now, and the idx
-
-void manacher(char *str) {
-    mx = 0, idx = 0;
-    int ans = 0;
-    memset(p, 0, sizeof(p));
-    int size = (int)strlen(str);
-   
-    for(int i = 1; str[i]; ++i) {
-        p[i] = mx > i ? minab(p[idx*2 - i], mx - i) : 1;
-        while((p[i] + i < size) && (i - p[i] >= 0) && str[p[i]+i] == str[i-p[i]]) {
-            ++p[i];
-        }
-        
-        if(i + p[i] > mx) {
-            mx = i + p[i];
-            idx = i;
-        }
-    //    printf("p[i] = %d\n", p[i]);
-        if(str[i] == '#') {
-            if(((p[i]) / 2) * 2 > ans) {
-                ans = (p[i]) / 2 * 2;
-            }
-        }
-        else {
-            if((p[i] - 1)/2 * 2 + 1 > ans) {
-                ans = (p[i] - 1) / 2 * 2 + 1;
-            }
-        }
+struct node {
+    int u, d;
+    bool operator < (const node &rhs) const {
+        return d > rhs.d;
     }
-    printf("%d\n", ans);
-}
+};
+vector<node > edge[N];
+int cost[N];
+bool vis[N];
+priority_queue<node > prim;
 
 int main() {
-    int n;
-    scanf("%d", &n);
-    for(int i = 0; i < n; ++i) {
-        cin >> st;
-        for(int j = 0; j < st.size(); ++j) {
-            s[j<<1|1] = '#';
-            s[(j<<1) + 2] = st[j];
-        }
-        s[st.size() << 1 | 1] = '#';
-        s[(st.size() << 1) + 2] = '0';
-     //   printf("%s\n", s+1);
-        manacher(s+1);
+    int n, m;
+    scanf("%d %d", &n, &m);
+    
+    for(int i = 0; i < m; ++i) {
+        int x, y, z;
+        scanf("%d %d %d", &x, &y, &z);
+        edge[x].push_back(node{y, z});
+        edge[y].push_back(node{x, z});
     }
+    memset(cost, INF, sizeof(cost));
+    memset(vis, false, sizeof(vis));
+    cost[1] = 0;
+    prim.push(node{1, 0});
+    
+    int ans = 0;
+    while(!prim.empty()) {
+        node u = prim.top();
+        prim.pop();
+        
+        if(vis[u.u]) {
+            continue;
+        }
+        
+        //if(cost[u.u] == u.d) 这种方式只适合dijkstra, 对于prim如果同一条边这样判断可能会加入多次
+        //而dijkstra即使加入多次，也没影响(一个算d[i],一个算总的cost)
+        
+        vis[u.u] = true, ans += u.d;
+        for(node v : edge[u.u]) {
+            if(cost[v.u] > v.d) {
+                cost[v.u] = v.d;
+                prim.push(node{v.u, v.d});
+            }
+        }
+    }
+    
+    printf("%d\n", ans);
     return 0;
 }

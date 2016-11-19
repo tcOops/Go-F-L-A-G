@@ -257,7 +257,10 @@ int main() {
 }
 */
 
+<<<<<<< HEAD
+=======
 /*
+>>>>>>> 27ac5675e9532836194aafe4bb9727cb6f46c673
 const int N = 2010;
 int dp[N][N];
 int n;

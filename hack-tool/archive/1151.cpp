@@ -1,81 +1,131 @@
-//提交地址: http://hihocoder.com/problemset/problem/1162
-//数位DP
- 
+//提交地址: http://hihocoder.com/problemset/problem/1237
+//简单数学题
+
+/*
+#include<cstdio>
+#include<cmath>
 #include<iostream>
 #include<cstring>
+#include<algorithm>
+#include<map>
+#include<vector>
+#include<string>
 using namespace std;
+typedef long long LL;
 
-#define ll long long int
-#define rep(a,b,c) for(int a = b; a < c; a++)
+const int MOD = 19999997;
 
-const int mod = 1000000007;
-
-struct node{
-    ll s,n;
-};
-
-node dp[21][20][400];
-
-int bits[21];
-ll base[21];
-
-
-node dfs(int len, int dig, bool begin_zero, bool end_flag, int sum){
-    node t;
-    t.s = 0, t.n = 0;
-    //超过边界值
-    if(len <= 0 || len >= 20 || dig < 0 || dig > 9 || sum < -200 || sum >= 200)
-        return t;
-    //返回已有的DP结果，即记忆化搜索
-    if(!end_flag && dp[len][dig + (begin_zero?0:10)][sum+200].n != -1)
-        return dp[len][dig + (begin_zero?0:10)][sum+200];
-    //长度只有一位，就不需要枚举下一位了，直接讨论返回即可
-    if(len == 1){
-        if(dig != sum)
-        return t;
-        t.n = 1, t.s = sum;
-        return t;
-    }
-    //开始枚举下一位的数字
-    int end = end_flag? bits[len-2] : 9;
-    int newsum = dig - sum;
-    node tmp;
-    rep(j,0,end + 1){
-        if(!begin_zero){
-            tmp = dfs(len-1, j, j!=0, end_flag&& (j == end), sum);
-        }
-        else{
-            tmp = dfs(len-1, j, true, end_flag&& (j == end), newsum);
-        }
-        //将tmp的值累加到t上
-        t.n += tmp.n;
-        t.s = ((t.s + tmp.s)%mod + ((tmp.n * dig )%mod * base[len-1])%mod)%mod;
-    }
-    if(!end_flag) dp[len][dig + (begin_zero?0:10)][sum+200] = t;
-    return t;
-}
-
-ll solve(ll n, ll s){
-    if(n <= 0)
-    return 0;
-    int l = 0;
-    rep(i,0,21) bits[i] = 0;
+void gao(LL a[2][2], int n){
+    LL b[2][2], c[2][2];
+    b[0][0] = 1, b[1][1] = 1, b[1][0] = 0, b[0][1] = 0;
     while(n){
-        bits[l++]= n%10;
-        n /= 10;
+        if(n&1){
+            c[0][0] = ((b[0][0]*a[0][0])%MOD + (b[0][1]*a[1][0])%MOD)%MOD;
+            c[0][1] = ((b[0][0]*a[0][1])%MOD + (b[0][1]*a[1][1])%MOD)%MOD;
+            c[1][0] = ((b[1][0]*a[0][0])%MOD + (b[1][1]*a[1][0])%MOD)%MOD;
+            c[1][1] = ((b[1][0]*a[0][1])%MOD + (b[1][1]*a[1][1])%MOD)%MOD;
+            for(int i = 0; i < 2; ++i){
+                for(int j = 0; j < 2; ++j){
+                    b[i][j] = c[i][j];
+                }
+            }
+        }
+
+        n >>= 1;
+        c[0][0] = ((a[0][0]*a[0][0])%MOD + (a[0][1]*a[1][0])%MOD)%MOD;
+        c[0][1] = ((a[0][0]*a[0][1])%MOD + (a[0][1]*a[1][1])%MOD)%MOD;
+        c[1][0] = ((a[1][0]*a[0][0])%MOD + (a[1][1]*a[1][0])%MOD)%MOD;
+        c[1][1] = ((a[1][0]*a[0][1])%MOD + (a[1][1]*a[1][1])%MOD)%MOD;
+        for(int i = 0; i < 2; ++i){
+            for(int j = 0; j < 2; ++j){
+                a[i][j] = c[i][j];
+            }
+        }
     }
-    return dfs(l+1,0,false,true,s).s;
+    LL ans = (b[0][0] + b[1][0])%MOD;
+    printf("%lld\n", ans);
 }
 
 int main(){
-    ll l, r, s;
-    node t;
-    t.n = -1;
-    t.s = 0;
-    rep(i,0,21) rep(j,0,20) rep(k,0,400) dp[i][j][k] = t;
-    base[0] = 1;
-    rep(i,1,21) base[i] = (base[i-1]*10)%mod;
-    cin >> l >> r >> s;
-    cout << (solve(r,s) - solve(l-1,s) + mod)%mod << endl;
+    int n;
+    while(~scanf("%d", &n)){
+    if(n == 1){
+        printf("1\n");
+    }
+    else{
+        LL matrix[2][2] = {{1,1}, {1,0}};
+        gao(matrix, n-1);
+    }
+    }
+    return 0;
+}
+*/
+ 
+#include<cstdio>
+#include<cmath>
+#include<iostream>
+#include<cstring>
+#include<algorithm>
+#include<map>
+#include<vector>
+#include<string>
+using namespace std;
+typedef long long LL;
+const int N = 140;
+const int MOD = 12357;
+int n, k;
+
+int sta[N][N];
+
+void dfs(int x, int y, int cnt){
+    if(cnt == k){
+        sta[y][x] = 1;
+        return ;
+    }
+    dfs(x<<1, y<<1|1, cnt+1);
+    dfs(x<<1|1, y<<1, cnt+1);
+    if(cnt+2 <= k){
+        dfs((x<<2)+3, (y<<2)+3, cnt+2);
+    }
+}
+
+void matrixMul(int a[][N], int b[][N], int k){
+    int c[N][N];
+    for(int i = 0; i < k; ++i){
+        for(int j = 0; j < k; ++j){
+            c[i][j] = 0;
+            for(int t = 0; t < k; ++t){
+                c[i][j] += a[i][t]*b[t][j];
+                c[i][j] = c[i][j] % MOD;
+            }
+        }
+    }
+    
+    for(int i = 0; i < k; ++i){
+        for(int j = 0; j < k; ++j){
+            a[i][j] = c[i][j];
+        }
+    }
+}
+
+int main(){
+    scanf("%d", &n);
+    k = 3;
+    int a[N][N];
+    memset(a, 0, sizeof(a));
+    for(int i = 0; i < (1<<k); ++i){
+        a[i][i] = 1;
+    }
+    memset(sta, 0, sizeof(sta));
+    dfs(0, 0, 0);
+    
+    while(n){
+        if(n&1){
+            matrixMul(a, sta, (1<<k));
+        }
+        n >>= 1;
+        matrixMul(sta, sta, (1<<k));
+    }
+    printf("%d\n", a[(1<<k)-1][(1<<k)-1]);
     return 0;
 }

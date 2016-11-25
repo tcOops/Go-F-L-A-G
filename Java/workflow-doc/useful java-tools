@@ -86,3 +86,15 @@ http://blog.csdn.net/youyedemeng/article/details/7109754
 Mybatis是类似hibernate的一个ORM模型，
 h2是内存数据库
 mybatis可以选择对mysql或者h2操作, 可以在mybatis-config.xml中进行配置，　然后在secret.properties中设置当前数据库的工作环境(仅针对workflow)
+
+新建一个mysql的用户， 以及将某个数据库的权限赋给他:
+grant all on workflowdb.* to workflow@localhost identified by 123456;
+source /path/*.sql;
+
+
+Cron的规则解析:
+http://blog.csdn.net/foamflower/article/details/4260645
+
+Thrift与http通信的差异:
+大部分业务不需要从前端发起，只在后端的模块之间进行数据通信的话，推荐用RPC（thrift），开销相对比较小
+然而thrift的问题在于比较难实现双向通信

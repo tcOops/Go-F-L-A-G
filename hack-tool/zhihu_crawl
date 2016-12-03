@@ -1,0 +1,118 @@
+#!/usr/bin/env python
+# encoding: utf-8
+
+import os, sys
+from bs4 import BeautifulSoup
+import requests
+import ConfigParser, json, re
+reload(sys)
+sys.setdefaultencoding('utf8')
+
+hacker = None
+cookie = {}
+xsrf = ''
+hacker_name = ''
+
+def hacker_login():
+	global hacker, xsrf, hacker_name
+	conf = ConfigParser.ConfigParser()
+	conf.read('info.conf')
+	#print conf._sections['baseinfo']
+
+	userEmail = conf.get("baseinfo", 'userEmail')
+	pwd = conf.get("baseinfo", 'password')
+	xsrf = conf.get("baseinfo", 'xsrf')
+	hacker_name = conf.get("baseinfo", 'name')
+
+	post_data = {'email':userEmail, 'password':pwd}
+	header = {
+	 	'User-Agent': "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.97 Safari/537.36",
+        'Host': "www.zhihu.com",
+        'Referer': "http://www.zhihu.com/",
+        '_xsrf': xsrf
+	}
+
+	s = requests.session()
+	r = s.post('http://www.zhihu.com/login/email', data=post_data, headers=header, verify=False)
+	print r.json()
+	hacker = s
+	#print r.cookies
+	conf.set('cookies', 'a', 'b')
+	wr = open("info.conf","w")
+	conf.write(wr)
+	#print r.json()['r']
+
+class zhihuHack(object):
+	global hacker, cookie, xsrf, hacker_name
+	def __init__(self):
+		if hacker is None:
+			hacker_login()
+
+	def parser(self):
+		#get the first part
+		url = 'https://www.zhihu.com/people/{0}'.format(hacker_name)
+		s = hacker
+		r = s.get(url, cookies = cookie)
+		soup = BeautifulSoup(r.content, 'html.parser')
+		isMore = soup.find_all("div", class_="zm-profile-section-item zm-item clearfix")
+		if not isMore: 
+			dataTime = ''
+		else:
+			dataTime = isMore[-1]['data-time']
+
+
+		conf = ConfigParser.ConfigParser()
+		conf.read('info.conf')
+		#print conf._sections['baseinfo']
+
+		try:
+			filePos = conf.get("fileinfo", 'filepos')
+		except Exception:
+			filePos = os.getcwd() + '/hackerMainPage'
+			conf.set('fileinfo', 'filepos', filePos)
+			wr = open("info.conf","w")
+			conf.write(wr)
+
+		print filePos
+		if not os.path.isdir(filePos):
+			os.mkdir(filePos)
+
+		pages = ''
+		while True:	
+			pages += soup.prettify()
+ 
+			print dataTime
+			if not dataTime: 
+				break
+
+			post_data = {'start' : dataTime, '_xsrf': xsrf}
+			header = {
+			 	'Host':'www.zhihu.com',
+				'Origin':'https://www.zhihu.com',
+				'Referer':'https://www.zhihu.com/people/{0}'.format(hacker_name),
+				'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.97 Safari/537.36',
+				'X-Requested-With':'XMLHttpRequest'
+			}
+
+			s = requests.session()
+			postUrl = 'http://www.zhihu.com/people/{0}/activities'.format(hacker_name)
+			r = s.post(postUrl, data=post_data, headers=header, verify=False)
+
+			#Get More(when click getMore button)
+			content = r.json()['msg'][-1]
+			soup = BeautifulSoup(content, 'html.parser')
+			isMore = soup.find_all("div", class_="zm-profile-section-item zm-item clearfix")
+			if not isMore: 
+				dataTime = ''
+			else:
+				dataTime = isMore[-1]['data-time']	
+
+		fileName = filePos + '/homePage.html'
+		fp = open(fileName, 'w')
+		fp.write(pages)	
+		fp.close()
+
+
+if __name__ == '__main__':
+	hack = zhihuHack()
+	hack.parser()
